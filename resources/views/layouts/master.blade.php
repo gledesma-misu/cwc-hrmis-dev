@@ -51,9 +51,7 @@
                     <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;
                         All rights reserved <i class="icon-hear" aria-hidden="true" ></i> by <a href="#"> Management Information Systems Unit </a> <br>
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script> </p>
+                        </p>
                 </div>
 
             </div>

@@ -5745,7 +5745,7 @@ vue-loader@^17.3.1:
 
 vue@^3.2.36:
   version "3.2.36"
-  resolved "https://registry.npmjs.org/vue/-/vue-3.2.36.tgz"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.36.tgz#8daa996e2ced521708de97d066c7c998e8bc3378"
   integrity sha512-5yTXmrE6gW8IQgttzHW5bfBiFA6mx35ZXHjGLDmKYzW6MMmYvCwuKybANRepwkMYeXw2v1buGg3/lPICY5YlZw==
   dependencies:
     "@vue/compiler-dom" "3.2.36"

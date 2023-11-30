@@ -10,6 +10,22 @@ use Session;
 
 class DepartmentController extends Controller
 {
+    //below for VUE Js
+    public getDepartments(){
+        return response()->json(Department::latest()->get());
+    }
+    public function storeDepartment(Request $request){
+        Department::create([
+            'name'          => $request->name   , 
+            'director_id'   => $request->director_id,
+            'user_id'       => 1
+        ]);
+
+        return response()->json('success');
+    } 
+
+
+    //below is for laravel
     public function index(){
         $departments = Department::all();
         return view('management.departments.index', compact('departments'));
