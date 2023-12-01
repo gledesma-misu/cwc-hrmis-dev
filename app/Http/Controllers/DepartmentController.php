@@ -11,7 +11,7 @@ use Session;
 class DepartmentController extends Controller
 {
     //below for VUE Js
-    public getDepartments(){
+    public function getDepartments(){
         return response()->json(Department::latest()->get());
     }
     public function storeDepartment(Request $request){
@@ -24,6 +24,20 @@ class DepartmentController extends Controller
         return response()->json('success');
     } 
 
+    public function updateDepartment(Request $request, $id){
+        Department::where('id', $id)->update([
+            'name'          => $request->name   , 
+            'director_id'   => $request->director_id,
+        
+        ]);
+
+        return response()->json('success');
+    }
+    public function deleteDepartment($id){
+        Department::where('id', $id)->delete();
+
+        return response()->json('success');
+    }
 
     //below is for laravel
     public function index(){

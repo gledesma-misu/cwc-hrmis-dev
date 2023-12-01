@@ -9,6 +9,42 @@
           </button>
         </div>
         <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover text-center">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Director</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(department, index) in departments" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ department.name }}</td>
+                  <td>{{ department.director_id }}</td>
+                  <td>
+                    <button
+                      class="btn btn-success mx-1"
+                      @click="editDepartment(department)"
+                    >
+                      <i class="fa fa-edit"></i>
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger mx-1"
+                      @click="deleteDepartment(department)"
+                    >
+                      <i class="fa fa-trash"></i>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <!-- Modal -->
           <div
             class="modal fade"
@@ -21,7 +57,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">
-                    Modal title
+                    {{ !editMode ? "Create Department" : "Update Department" }}
                   </h5>
                   <button
                     type="button"
@@ -69,10 +105,10 @@
                   </button>
                   <button
                     type="button"
-                    @click="storeDepartment"
+                    @click="!editMode ? storeDepartment() : updateDepartment()"
                     class="btn btn-success"
                   >
-                    Store
+                    {{ !editMode ? "Store" : "Save Changes" }}
                   </button>
                 </div>
               </div>
@@ -88,31 +124,66 @@
 export default {
   data() {
     return {
+      editMode: false,
+      departments: {},
       departmentData: {
+        id: "",
         name: "",
         director_id: "",
       },
     };
   },
   methods: {
-    getDepartments(){
-        axios.get(`${window.url}api/getDepartments`).then((response) => {
-            console.log(response.data)
-        })
+    getDepartments() {
+      axios.get(`${window.url}api/getDepartments`).then((response) => {
+        console.log(response.data);
+        this.departments = response.data;
+      });
     },
     createDepartment() {
-        this.departmentData.name = this.departmentData.director_id = ''
+      this.editMode = false;
+      this.departmentData.name = this.departmentData.director_id = "";
       $("#exampleModal").modal("show");
     },
     storeDepartment() {
-        axios.post(window.url + 'api/storeDepartment', this.departmentData)
+      axios
+        .post(window.url + "api/storeDepartment", this.departmentData)
         .then((response) => {
-            $("#exampleModal").modal("show");
-        })
+          this.getDepartments();
+          $("#exampleModal").modal("hide");
+        });
     },
-    
+    editDepartment(department) {
+      this.editMode = true;
+      this.departmentData.id = department.id;
+      this.departmentData.name = department.name;
+      this.departmentData.director_id = department.director_id;
+      $("#exampleModal").modal("show");
+    },
+    updateDepartment() {
+      axios
+        .post(
+          window.url + "api/updateDepartment/" + this.departmentData.id,
+          this.departmentData
+        )
+        .then((response) => {
+          this.getDepartments();
+          $("#exampleModal").modal("hide");
+        });
+    },
+    deleteDepartment(department) {
+      if (confirm("Are you sure you wanna delete this department?")) {
+        axios
+          .post(window.url + "api/deleteDepartment/" + department.id)
+          .then(() => {
+            this.getDepartments();
+          });
+      }
+    },
   },
-  mounted() {},
+  mounted() {
+    this.getDepartments();
+  },
 };
 </script>
 
