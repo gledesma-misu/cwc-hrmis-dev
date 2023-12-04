@@ -77,6 +77,14 @@
                           name="name"
                           v-model="departmentData.name"
                         />
+                        <div
+                          class="text-danger"
+                          v-if="departmentData.errors.has('name')"
+                          v-html="departmentData.errors.get('name')"
+                        />
+                        <!-- <p class="text-danger" v-if="departmentErrors.name">
+                          Name is required
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -91,6 +99,17 @@
                           <option value="1">IT Director</option>
                           <option value="2">HR Director</option>
                         </select>
+                        <div
+                          class="text-danger"
+                          v-if="departmentData.errors.has('director_id')"
+                          v-html="departmentData.errors.get('director_id')"
+                        />
+                        <!-- <p
+                          class="text-danger"
+                          v-if="departmentErrors.director_id"
+                        >
+                          Director is required
+                        </p> -->
                       </div>
                     </div>
                   </div>
@@ -126,10 +145,14 @@ export default {
     return {
       editMode: false,
       departments: {},
-      departmentData: {
+      departmentData: new Form({
         id: "",
         name: "",
         director_id: "",
+      }),
+      departmentErrors: {
+        name: false,
+        director_id: false,
       },
     };
   },
@@ -146,12 +169,22 @@ export default {
       $("#exampleModal").modal("show");
     },
     storeDepartment() {
-      axios
-        .post(window.url + "api/storeDepartment", this.departmentData)
+      //   this.departmentData.name == ""
+      //     ? (this.departmentErrors.name = true)
+      //     : (this.departmentErrors.name = false);
+      //   this.departmentData.director_id == ""
+      //     ? (this.departmentErrors.director_id = true)
+      //     : (this.departmentErrors.director_id = false);
+
+      //   if (this.departmentData.name && this.departmentData.director_id) {
+
+      this.departmentData
+        .post(window.url + "api/storeDepartment")
         .then((response) => {
           this.getDepartments();
           $("#exampleModal").modal("hide");
         });
+      //   }
     },
     editDepartment(department) {
       this.editMode = true;
@@ -161,15 +194,21 @@ export default {
       $("#exampleModal").modal("show");
     },
     updateDepartment() {
-      axios
-        .post(
-          window.url + "api/updateDepartment/" + this.departmentData.id,
-          this.departmentData
-        )
+      //   this.departmentData.name == ""
+      //     ? (this.departmentErrors.name = true)
+      //     : (this.departmentErrors.name = false);
+      //   this.departmentData.director_id == ""
+      //     ? (this.departmentErrors.director_id = true)
+      //     : (this.departmentErrors.director_id = false);
+
+      //   if (this.departmentData.name && this.departmentData.director_id) {
+      this.departmentData
+        .post(window.url + "api/updateDepartment/" + this.departmentData.id)
         .then((response) => {
           this.getDepartments();
           $("#exampleModal").modal("hide");
         });
+      //   }
     },
     deleteDepartment(department) {
       if (confirm("Are you sure you wanna delete this department?")) {

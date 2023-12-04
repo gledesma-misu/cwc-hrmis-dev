@@ -15,6 +15,12 @@ class DepartmentController extends Controller
         return response()->json(Department::latest()->get());
     }
     public function storeDepartment(Request $request){
+
+        $request->validate([
+            'name'=> ['required'],
+            'director_id' => ['required'],
+        ]);
+
         Department::create([
             'name'          => $request->name   , 
             'director_id'   => $request->director_id,
@@ -25,6 +31,12 @@ class DepartmentController extends Controller
     } 
 
     public function updateDepartment(Request $request, $id){
+        
+        $request->validate([
+            'name'=> ['required'],
+            'director_id' => ['required'],
+        ]);
+
         Department::where('id', $id)->update([
             'name'          => $request->name   , 
             'director_id'   => $request->director_id,

@@ -1850,10 +1850,10 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-axios@^1.1.2:
-  version "1.6.1"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.6.1.tgz"
-  integrity sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==
+axios@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
+  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
@@ -5733,6 +5733,11 @@ vendors@^1.0.0:
   version "1.0.4"
   resolved "https://registry.npmjs.org/vendors/-/vendors-1.0.4.tgz"
   integrity sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w==
+
+vform@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/vform/-/vform-2.1.2.tgz#4d52ccfb3f162de76d01ac6ce26d15693b6c8e65"
+  integrity sha512-Nobg/0ckWHYQAjJJqucOyRv/a3enO40f087KBpkSUCl0eRQTE8qmUqk/l5gmbxhD8UO3A8dDiSRWKmKF8+l4YQ==
 
 vue-loader@^17.3.1:
   version "17.3.1"
