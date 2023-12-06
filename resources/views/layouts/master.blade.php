@@ -19,14 +19,15 @@
     <div class="wrapper d-flex align-items-stretch" id="app">
         <nav id="sidebar">
             <div class="p-4 pt-5">
-                <a href="#" >
-                    <img class="img logo mb-5" style="" src="{{ asset('public/images/logo.png') }}" alt="logo">
+                <a href="#">
+                    <img class="img logo mb-5" style="" src="{{ asset('public/images/logo.png') }}"
+                        alt="logo">
                 </a>
                 <ul class="list-unstyled components mb-5">
                     <li class="active">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"
-                            class="dropdown-toggle" data-bs-toggle="collapse" role="button" aria-expanded="false" 
-                          aria-controls="homeSubmenu">Management</a>
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"
+                            data-bs-toggle="collapse" role="button" aria-expanded="false"
+                            aria-controls="homeSubmenu">Management</a>
                         <ul class="collapse list-unstyled" id="homeSubmenu">
                             <li>
                                 <a href="{{ route('departmentsIndex') }}">Departments</a>
@@ -50,8 +51,9 @@
                 <div class="footer">
                     <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;
-                        All rights reserved <i class="icon-hear" aria-hidden="true" ></i> by <a href="#"> Management Information Systems Unit </a> <br>
-                        </p>
+                        All rights reserved <i class="icon-hear" aria-hidden="true"></i> by <a href="#">
+                            Management Information Systems Unit </a> <br>
+                    </p>
                 </div>
 
             </div>
@@ -79,9 +81,12 @@
                                 <a class="nav-link" href="#">Settings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Logout</a>
+                                <a class="nav-link" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                    @csrf</form>
                             </li>
-                           
+
                         </ul>
                     </div>
                 </div>
@@ -96,9 +101,9 @@
             @endif
 
             @if (Session::has('success-message'))
-                    <p class="text-success">
-                        {{ Session::get('success-message') }}
-                    </p>
+                <p class="text-success">
+                    {{ Session::get('success-message') }}
+                </p>
             @endif
 
             @yield('content')

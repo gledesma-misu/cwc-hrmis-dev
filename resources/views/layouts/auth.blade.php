@@ -14,11 +14,11 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
-
+            <div class="col-md-8 mt-5">
+                <img src="{{ asset('public/images/auth.png') }}" alt="auth" width="100%">
             </div>
             <div class="col-md-4">
-                
+                @yield('content')
             </div>
         </div>
     </div>
