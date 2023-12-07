@@ -4,6 +4,13 @@
     <div class="row mt-5 pt-5">
         <div class="col-md-12">
             <h3>Reset your password!</h3>
+
+            @if(session('status'))
+                <div class="font-medium text-sm text-green-600">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <div class="card">
                 <div class="card-header bg-secondary">
                     <h5 class="text-center text-light">Reset Password</h5>
