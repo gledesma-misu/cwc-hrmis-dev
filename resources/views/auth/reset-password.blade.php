@@ -25,7 +25,7 @@
                                 </span>
                             @enderror
                         </div>
-                        
+
                         <div class="form-group my-1">
                             <label for="password">Password</label>
                             <input type="password" name="password"
@@ -53,11 +53,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group my-1">
-                                    <button type="submit" class="btn btn-warning float-start">Register</button>
+                                    <button type="submit" class="btn btn-warning float-start">Reset Password</button>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="{{ route('login') }}" class="btn btn-dark float-end my-1">Go Login</a>
                             </div>
                         </div>
                     </form>

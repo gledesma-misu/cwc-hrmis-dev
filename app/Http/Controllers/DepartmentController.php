@@ -10,6 +10,10 @@ use Session;
 
 class DepartmentController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware("auth");
+    }
     //below for VUE Js
     public function getDepartments(){
         return response()->json(Department::latest()->get());
