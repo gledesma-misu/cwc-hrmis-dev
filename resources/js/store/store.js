@@ -1,6 +1,24 @@
-import {createStore} from 'vuex';
+import { createStore } from "vuex";
 
-
-const store = createStore({
+export const store = createStore({
     string: true,
-})
+    state: {
+        test: 0,
+    },
+    getters: {
+        test(state){
+            return state.test
+        }
+    },
+    mutations: {
+        testMutation: (state) => {
+            state.test++;
+            console.log(state.test);
+        },
+    },
+    actions: {
+        testAction: (context) => {
+            context.commit("testMutation");
+        },
+    },
+});
