@@ -1,24 +1,29 @@
 import { createStore } from "vuex";
 
+import departmentsModule from './modules/departments';
+
 export const store = createStore({
-    string: true,
+    strict: true,
+    modules: {
+        departmentsModule
+    },
     state: {
-        test: 0,
+        // test: 0,
     },
     getters: {
-        test(state){
-            return state.test
-        }
+        // test(state){
+        //     return state.test
+        // }
     },
     mutations: {
-        testMutation: (state) => {
-            state.test++;
-            console.log(state.test);
-        },
+        // testMutation: (state) => {
+        //     state.test++;
+        //     console.log(state.test);
+        // },
     },
     actions: {
-        testAction: (context) => {
-            context.commit("testMutation");
-        },
+        // testAction: (context) => {
+        //     context.commit("testMutation");
+        // },
     },
 });
