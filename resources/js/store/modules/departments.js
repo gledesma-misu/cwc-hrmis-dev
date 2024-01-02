@@ -35,12 +35,21 @@ export default {
                 .post(
                     window.url +
                         "api/updateDepartment/" +
-                        this.departmentData.id
+                        departmentData.id
                 )
                 .then((response) => {
                     context.dispatch('getDepartments')
                     $("#exampleModal").modal("hide");
                 });
         },
+        deleteDepartment: (context, departmentData) => {
+            if (confirm("Are you sure you wanna delete this department?")) {
+                axios
+                  .post(window.url + "api/deleteDepartment/" + departmentData.id)
+                  .then(() => {
+                    context.dispatch('getDepartments')
+                  });
+              }
+        }
     },
 };

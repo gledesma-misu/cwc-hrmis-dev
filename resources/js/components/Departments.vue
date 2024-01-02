@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
           <button @click="testAction" class="btn btn-info">Test</button>
-          {{ test }}
+          <!-- {{ test }} -->
           <div class="table-responsive">
             <table class="table table-hover text-center">
               <thead>
@@ -27,17 +27,11 @@
                   <td>{{ department.name }}</td>
                   <td>{{ department.director_id }}</td>
                   <td>
-                    <button
-                      class="btn btn-success mx-1"
-                      @click="editDepartment(department)"
-                    >
+                    <button class="btn btn-success mx-1" @click="editDepartment(department)">
                       <i class="fa fa-edit"></i>
                       Edit
                     </button>
-                    <button
-                      class="btn btn-danger mx-1"
-                      @click="deleteDepartment(department)"
-                    >
+                    <button class="btn btn-danger mx-1" @click="deleteDepartment(department)">
                       <i class="fa fa-trash"></i>
                       Delete
                     </button>
@@ -48,42 +42,23 @@
           </div>
 
           <!-- Modal -->
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">
                     {{ !editMode ? "Create Department" : "Update Department" }}
                   </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="name">Name</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          name="name"
-                          v-model="departmentData.name"
-                        />
-                        <div
-                          class="text-danger"
-                          v-if="departmentData.errors.has('name')"
-                          v-html="departmentData.errors.get('name')"
-                        />
+                        <input type="text" class="form-control" name="name" v-model="departmentData.name" />
+                        <div class="text-danger" v-if="departmentData.errors.has('name')"
+                          v-html="departmentData.errors.get('name')" />
                         <!-- <p class="text-danger" v-if="departmentErrors.name">
                           Name is required
                         </p> -->
@@ -92,20 +67,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="director_id">Director</label>
-                        <select
-                          name="director_id"
-                          class="form-control"
-                          v-model="departmentData.director_id"
-                        >
+                        <select name="director_id" class="form-control" v-model="departmentData.director_id">
                           <option value="">Select a person</option>
                           <option value="1">IT Director</option>
                           <option value="2">HR Director</option>
                         </select>
-                        <div
-                          class="text-danger"
-                          v-if="departmentData.errors.has('director_id')"
-                          v-html="departmentData.errors.get('director_id')"
-                        />
+                        <div class="text-danger" v-if="departmentData.errors.has('director_id')"
+                          v-html="departmentData.errors.get('director_id')" />
                         <!-- <p
                           class="text-danger"
                           v-if="departmentErrors.director_id"
@@ -117,18 +85,11 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Close
                   </button>
-                  <button
-                    type="button"
-                    @click="!editMode ? storeDepartment() : updateDepartment()"
-                    class="btn btn-success"
-                  >
+                  <button type="button" @click="!editMode ? storeDepartment() : updateDepartment()"
+                    class="btn btn-success">
                     {{ !editMode ? "Store" : "Save Changes" }}
                   </button>
                 </div>
@@ -146,7 +107,7 @@ export default {
   data() {
     return {
       editMode: false,
-      departments: {},
+
       departmentData: new Form({
         id: "",
         name: "",
@@ -193,17 +154,12 @@ export default {
       //     : (this.departmentErrors.director_id = false);
 
       //   if (this.departmentData.name && this.departmentData.director_id) {
-          this.$store.dispatch('updateDepartment', this.departmentData)
+      this.$store.dispatch('updateDepartment', this.departmentData);
       //   }
     },
     deleteDepartment(department) {
-      if (confirm("Are you sure you wanna delete this department?")) {
-        axios
-          .post(window.url + "api/deleteDepartment/" + department.id)
-          .then(() => {
-            this.getDepartments();
-          });
-      }
+     
+      this.$store.dispatch('deleteDepartment', department);
     },
     // testAction() {
     //   this.$store.dispatch("testAction");
@@ -216,12 +172,11 @@ export default {
     // test() {
     //   return this.$store.getters.test;
     // },
-    departments(){
+    departments() {
       return this.$store.getters.departments
     }
   },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
