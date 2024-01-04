@@ -4,12 +4,12 @@
       <div class="card">
         <div class="card-header bg-dark">
           <h5 class="float-start text-light">Departments List</h5>
-          <button class="btn btn-success float-end" @click="createDepartment">
+          <button class="btn btn-success float-end" @click="createDepartment" v-if="current_permissions.has('departments-create')">
             New Department
           </button>
         </div>
         <div class="card-body">
-          <button @click="testAction" class="btn btn-info">Test</button>
+          <!-- <button @click="testAction" class="btn btn-info">Test</button> -->
           <!-- {{ test }} -->
           <div class="table-responsive">
             <table class="table table-hover text-center">
@@ -18,7 +18,7 @@
                   <th>#</th>
                   <th>Name</th>
                   <th>Director</th>
-                  <th>Actions</th>
+                  <th v-if="current_permissions.has('departments-update' || has('departments-delete'))">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -26,7 +26,7 @@
                   <td>{{ index + 1 }}</td>
                   <td>{{ department.name }}</td>
                   <td>{{ department.director_id }}</td>
-                  <td>
+                  <td v-if="current_permissions.has('departments-update' || has('departments-delete'))">
                     <button class="btn btn-success mx-1" @click="editDepartment(department)">
                       <i class="fa fa-edit"></i>
                       Edit
@@ -166,7 +166,9 @@ export default {
     // },
   },
   mounted() {
+
     this.$store.dispatch("getDepartments");
+    this.$store.dispatch("getAuthRolesAndPermissions");
   },
   computed: {
     // test() {
@@ -174,6 +176,12 @@ export default {
     // },
     departments() {
       return this.$store.getters.departments
+    },
+    current_roles() {
+      return this.$store.getters.current_roles
+    },
+    current_permissions() {
+      return this.$store.getters.current_permissions
     }
   },
 };
