@@ -25,33 +25,36 @@
                 </a>
                 <ul class="list-unstyled components mb-5">
                     @can('administrator')
-                    <li class="active">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"
-                            data-bs-toggle="collapse" role="button" aria-expanded="false"
-                            aria-controls="homeSubmenu">Management</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-                            @can('departments-read')
-                                <li>
-                                    <a href="{{ route('departmentsIndex') }}">Departments</a>
-                                </li>
-                            @endcan
-                            @can('users-read')
-                                <li>
-                                    <a href="{{ route('usersIndex') }}">Users</a>
-                                </li>
-                            @endcan
-                            @can('roles-read')
-                                <li>
-                                    <a href="#">Roles</a>
-                                </li>
-                            @endcan
-                            @can('permission-read')
-                                <li>
-                                    <a href="#">Permissions</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
+                        <li
+                            class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
+                            <a href="#homeSubmenu" data-toggle="collapse"
+                                aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}"
+                                class="dropdown-toggle" data-bs-toggle="collapse" role="button"
+                                aria-controls="homeSubmenu">Management</a>
+                            <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}"
+                                id="homeSubmenu">
+                                @can('departments-read')
+                                    <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                        <a href="{{ route('departmentsIndex') }}">Departments</a>
+                                    </li>
+                                @endcan
+                                @can('users-read')
+                                    <li class="{{ Request::is('users/index') ? 'active' : '' }}">
+                                        <a href="{{ route('usersIndex') }}">Users</a>
+                                    </li>
+                                @endcan
+                                @can('roles-read')
+                                    <li class="{{ Request::is('roles/index') ? 'active' : '' }}">
+                                        <a href="{{ route('rolesIndex') }}">Roles</a>
+                                    </li>
+                                @endcan
+                                @can('permission-read')
+                                    <li class="{{ Request::is('permissions/index') ? 'active' : '' }}">
+                                        <a href="#">Permissions</a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </li>
                     @endcan
                     <li>
                         <a href="#">Tasks Inbox</a>
@@ -121,10 +124,10 @@
     </div>
 
     @auth
-    <script>
-        window.auth_roles = {!! json_encode(auth()->user()->roles) !!};
-        window.auth_permissions = {!! json_encode(auth()->user()->permissions) !!};
-    </script>
+        <script>
+            window.auth_roles = {!! json_encode(auth()->user()->roles) !!};
+            window.auth_permissions = {!! json_encode(auth()->user()->permissions) !!};
+        </script>
     @endauth
     <script src="{{ asset('public/js/app.js') }}"></script>
     <!-- <script src="{{ asset('public/sidebar/js/jquery.min.js') }}"></script>
