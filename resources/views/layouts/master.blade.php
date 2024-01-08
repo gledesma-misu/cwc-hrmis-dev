@@ -50,7 +50,7 @@
                                 @endcan
                                 @can('permission-read')
                                     <li class="{{ Request::is('permissions/index') ? 'active' : '' }}">
-                                        <a href="#">Permissions</a>
+                                        <a href="{{ route('permissionsIndex') }}">Permissions</a>
                                     </li>
                                 @endcan
                             </ul>

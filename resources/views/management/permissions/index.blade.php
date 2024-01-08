@@ -5,12 +5,12 @@
         <div class="card-header bg-dark">
             <div class="row">
                 <div class="col-md-6">
-                    <h5 class="text-light">Roles</h5>
+                    <h5 class="text-light">Permissions</h5>
                 </div>
                 <div class="col-md-6">
-                    @can('roles-create')
-                        <a href="{{ route('rolesCreate') }}" class="btn btn-success float-right">
-                            Create New Role
+                    @can('permission-create')
+                        <a href="{{ route('permissionsCreate') }}" class="btn btn-success float-right">
+                            Create New Permission
                         </a>
                     @endcan
                 </div>
@@ -27,30 +27,30 @@
                                     <th>Name</th>
                                     <th>Display Name</th>
                                     <th>Description</th>
-                                    @canany(['roles-update','roles-delete'])
-                                     <th>Actions</th>
+                                    @canany(['permission-update', 'permission-delete'])
+                                        <th>Actions</th>
                                     @endcanany
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($roles as $role)
+                                @foreach ($permissions as $permission)
                                     <tr>
                                         <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $role->name }}</td>
-                                        <td>{{ $role->display_name }}</td>
-                                        <td>{{ $role->description }}</td>
-                                        @canany(['roles-update','roles-delete'])
+                                        <td>{{ $permission->name }}</td>
+                                        <td>{{ $permission->display_name }}</td>
+                                        <td>{{ $permission->description }}</td>
+                                        @canany(['permission-update', 'permission-delete'])
                                             <td>
-                                                @can('roles-update')
+                                                @can('permission-update')
                                                     <div class="float-left mx-1">
-                                                        <a href="{{ route('rolesEdit', $role->id) }}" class="btn btn-success">
+                                                        <a href="{{ route('rolesEdit', $permission->id) }}" class="btn btn-success">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                     </div>
                                                 @endcan
-                                                @can('roles-delete')
+                                                @can('permission-delete')
                                                     <div class="float-left mx-1">
-                                                        <form action="{{ route('rolesDelete', $role->id) }}" method="POST">
+                                                        <form action="{{ route('rolesDelete', $permission->id) }}" method="POST">
                                                             @csrf
                                                             <button class="btn btn-danger">
                                                                 <i class="fa fa-trash"></i>

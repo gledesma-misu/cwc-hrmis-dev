@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +34,8 @@ Route::post('roles/store',[RoleController::class,'store'] )->name('rolesStore');
 Route::get('roles/edit/{id}',[RoleController::class,'edit'] )->name('rolesEdit');
 Route::post('roles/update/{id}',[RoleController::class,'update'] )->name('rolesUpdate');
 Route::post('roles/delete/{id}',[RoleController::class,'delete'] )->name('rolesDelete');
+
+Route::get('permissions/index', [PermissionController::class, 'index'])->name('permissionsIndex');
+Route::get('permissions/create', [PermissionController::class, 'create'])->name('permissionsCreate');
+
 Route::get('users/index', [UserController::class,'index'])->name('usersIndex');
