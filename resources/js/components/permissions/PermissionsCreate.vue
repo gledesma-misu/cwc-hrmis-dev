@@ -109,8 +109,23 @@
     </div>
   </div>
 
-  <div class="row">
-    
+  <div class="row" v-if="permissionData.resource.length >= 3 && permissionData.crudSelected.length > 0">
+    <div class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Display Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in permissionData.crudSelected" :key="index">
+          <td v-text="crudName(item)"></td>
+          <td v-text="crudDisplayName(item)"></td>
+          <td v-text="crudDisplayName(item)"></td>
+        </tr>
+      </tbody>
+    </div>
   </div>
 </template>
 
@@ -125,5 +140,13 @@ export default {
       },
     };
   },
+  methods: {
+    crudName(item){
+      
+    },
+    crudName(item){
+
+    }
+  }
 };
 </script>
