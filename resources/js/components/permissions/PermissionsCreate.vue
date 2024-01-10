@@ -67,7 +67,7 @@
           type="checkbox"
           class="form-check-input"
           id="inlinecheckbox1"
-          name="crudSelected"
+          name="crudSelected[]"
           v-model="permissionData.crudSelected"
           value="create"
         />
@@ -78,7 +78,7 @@
           type="checkbox"
           class="form-check-input"
           id="inlinecheckbox2"
-          name="crudSelected"
+          name="crudSelected[]"
           v-model="permissionData.crudSelected"
           value="read"
         />
@@ -89,7 +89,7 @@
           type="checkbox"
           class="form-check-input"
           id="inlinecheckbox3"
-          name="crudSelected"
+          name="crudSelected[]"
           v-model="permissionData.crudSelected"
           value="update"
         />
@@ -100,17 +100,18 @@
           type="checkbox"
           class="form-check-input"
           id="inlinecheckbox4"
-          name="crudSelected"
+          name="crudSelected[]"
           v-model="permissionData.crudSelected"
           value="delete"
         />
         <label for="inlinecheckbox4" class="form-check-label">Delete</label>
       </div>
     </div>
+    <!-- <input type="hidden" name="crudSelected[]" v-model="permissionData.crudSelected"> -->
   </div>
 
-  <div class="row" v-if="permissionData.resource.length >= 3 && permissionData.crudSelected.length > 0">
-    <div class="table">
+  <div class="row" v-if="permissionData.resource.length >= 3 && permissionData.crudSelected.length > 0 && permissionData.permission_type == 'crud'">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -125,7 +126,7 @@
           <td v-text="crudDisplayName(item)"></td>
         </tr>
       </tbody>
-    </div>
+    </table>
   </div>
 </template>
 
@@ -142,10 +143,10 @@ export default {
   },
   methods: {
     crudName(item){
-      
+      return this.permissionData.resource.toLowerCase() + '-' + item.toLowerCase();
     },
-    crudName(item){
-
+    crudDisplayName(item){
+      return this.permissionData.resource.substr(0,1).toUpperCase() + this.permissionData.resource.substr(1) + ' ' + item.substr(0,1).toUpperCase() + item.substr(1);
     }
   }
 };

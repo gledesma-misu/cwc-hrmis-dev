@@ -11,7 +11,6 @@ class Department extends Model
 
     protected $fillable = [
         'user_id',
-        'director_id',
         'name',
     ];
 }

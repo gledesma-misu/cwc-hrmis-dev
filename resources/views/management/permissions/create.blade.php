@@ -6,7 +6,7 @@
             <h5 class="text-light">Create New Permission</h5>
         </div>
         <div class="card-body">
-            <form action="{{ route('rolesStore') }}" method="POST">
+            <form action="{{ route('permissionsStore') }}" method="POST">
                 @csrf
                 <permissions-create></permissions-create>
                 <div class="row">
