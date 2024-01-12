@@ -1514,6 +1514,11 @@
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.4.0-alpha.2.tgz"
   integrity sha512-SE/wXijlj9Y4X89toq/PTP9CV/LfLYxjV04NtwcJzMxKYmsM4tKzTvMiBUVdsZhuhH7BR5RoVanoRGLPG2DR/g==
 
+"@vueform/multiselect@^2.6.6":
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/@vueform/multiselect/-/multiselect-2.6.6.tgz#d8541f0eb6d03a53024461cfd54fb67f910b57cb"
+  integrity sha512-JDWesVRmyGz9HmHp2Ooy1cb8XgKohiztwMDtjm8c0/Th+7wEZENZuYa0iY5CTvaJNANl3LVqh9BNnCc/YlM/Bg==
+
 "@webassemblyjs/ast@1.11.6", "@webassemblyjs/ast@^1.11.5":
   version "1.11.6"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.11.6.tgz"

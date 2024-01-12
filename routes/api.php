@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +24,10 @@ Route::get('getDepartments',[DepartmentController::class, 'getDepartments'])->mi
 Route::post('storeDepartment',[DepartmentController::class, 'storeDepartment']);
 Route::post('updateDepartment/{id}',[DepartmentController::class, 'updateDepartment']);
 Route::post('deleteDepartment/{id}',[DepartmentController::class, 'deleteDepartment']);
+
+Route::get('getAllDepartments',[ApiController::class, 'getAllDepartments'])->middleware('auth:api');
+Route::get('getAllRoles',[ApiController::class, 'getAllRoles'])->middleware('auth:api');
+Route::get('getAllPermissions',[ApiController::class, 'getAllPermissions'])->middleware('auth:api');
+
+
+Route::post('storeUser', [UserController::class, 'storeUser']);
