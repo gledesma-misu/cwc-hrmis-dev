@@ -22,6 +22,7 @@ class User extends Authenticatable implements LaratrustUser
      * @var array<int, string>
      */
     protected $fillable = [
+        'department_id',
         'name',
         'email',
         'password',
@@ -46,4 +47,9 @@ class User extends Authenticatable implements LaratrustUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function department(){
+        return $this->belongsTo('App\Models\Department');
+    }
 }

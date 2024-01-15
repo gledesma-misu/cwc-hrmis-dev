@@ -31,3 +31,4 @@ Route::get('getAllPermissions',[ApiController::class, 'getAllPermissions'])->mid
 
 
 Route::post('storeUser', [UserController::class, 'storeUser']);
+Route::get('getUsers', [UserController::class, 'getUsers']);

@@ -13,18 +13,18 @@
           </button>
         </div>
         <div class="card-body">
-          <!-- <button @click="testAction" class="btn btn-info">Test</button> -->
-          <!-- {{ test }} -->
           <div class="table-responsive">
-            <!-- <table class="table table-hover text-center">
+            <table class="table table-hover text-center">
                 <thead>
                   <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
                     <th
                       v-if="
                         current_permissions.has(
-                          'departments-update' || has('departments-delete')
+                          'users-update' || has('users-delete')
                         )
                       "
                     >
@@ -33,27 +33,29 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(department, index) in departments" :key="index">
+                  <tr v-for="(user, index) in users" :key="index">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ department.name }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.department != null ? user.department.name : '...' }}</td>
   
                     <td
                       v-if="
                         current_permissions.has(
-                          'departments-update' || has('departments-delete')
+                          'users-update' || has('users-delete')
                         )
                       "
                     >
                       <button
                         class="btn btn-success mx-1"
-                        @click="editDepartment(department)"
+                        @click="editUser(user)"
                       >
                         <i class="fa fa-edit"></i>
                         Edit
                       </button>
                       <button
                         class="btn btn-danger mx-1"
-                        @click="deleteDepartment(department)"
+                        @click="deleteUser(user)"
                       >
                         <i class="fa fa-trash"></i>
                         Delete
@@ -61,7 +63,7 @@
                     </td>
                   </tr>
                 </tbody>
-              </table> -->
+              </table>
           </div>
 
           <!-- Modal -->
@@ -267,6 +269,7 @@ export default {
     // },
   },
   mounted() {
+    this.$store.dispatch("getUsers");
     this.$store.dispatch("getAllDepartments");
     this.$store.dispatch("getAllRoles");
     this.$store.dispatch("getAllPermissions");
@@ -274,6 +277,9 @@ export default {
   },
   computed: {
 
+    users() {
+      return this.$store.getters.users;
+    },
     filtered_permissions() {
       return this.$store.getters.filtered_permissions;
     },
