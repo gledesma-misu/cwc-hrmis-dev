@@ -15,55 +15,57 @@
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-hover text-center">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th
-                      v-if="
-                        current_permissions.has(
-                          'users-update' || has('users-delete')
-                        )
-                      "
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th
+                    v-if="
+                      current_permissions.has(
+                        'users-update' || has('users-delete')
+                      )
+                    "
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(user, index) in users" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    {{ user.department != null ? user.department.name : "..." }}
+                  </td>
+
+                  <td
+                    v-if="
+                      current_permissions.has(
+                        'users-update' || has('users-delete')
+                      )
+                    "
+                  >
+                    <button
+                      class="btn btn-success mx-1"
+                      @click="editUser(user)"
                     >
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(user, index) in users" :key="index">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.department != null ? user.department.name : '...' }}</td>
-  
-                    <td
-                      v-if="
-                        current_permissions.has(
-                          'users-update' || has('users-delete')
-                        )
-                      "
+                      <i class="fa fa-edit"></i>
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger mx-1"
+                      @click="deleteUser(user)"
                     >
-                      <button
-                        class="btn btn-success mx-1"
-                        @click="editUser(user)"
-                      >
-                        <i class="fa fa-edit"></i>
-                        Edit
-                      </button>
-                      <button
-                        class="btn btn-danger mx-1"
-                        @click="deleteUser(user)"
-                      >
-                        <i class="fa fa-trash"></i>
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      <i class="fa fa-trash"></i>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <!-- Modal -->
@@ -97,7 +99,11 @@
                           class="form-control"
                           v-model="userData.name"
                         />
-                        <div class="text-danger" v-if="userData.errors.has('name')" v-html="userData.errors.get('name')"></div>
+                        <div
+                          class="text-danger"
+                          v-if="userData.errors.has('name')"
+                          v-html="userData.errors.get('name')"
+                        ></div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -108,7 +114,11 @@
                           class="form-control"
                           v-model="userData.email"
                         />
-                        <div class="text-danger" v-if="userData.errors.has('email')" v-html="userData.errors.get('email')"></div>
+                        <div
+                          class="text-danger"
+                          v-if="userData.errors.has('email')"
+                          v-html="userData.errors.get('email')"
+                        ></div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -119,7 +129,11 @@
                           class="form-control"
                           v-model="userData.password"
                         />
-                        <div class="text-danger" v-if="userData.errors.has('password')" v-html="userData.errors.get('password')"></div>
+                        <div
+                          class="text-danger"
+                          v-if="userData.errors.has('password')"
+                          v-html="userData.errors.get('password')"
+                        ></div>
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -130,7 +144,6 @@
                           v-model="userData.department_id"
                           :searchable="true"
                         ></multi-select>
-                        
                       </div>
                     </div>
                   </div>
@@ -221,15 +234,17 @@ export default {
     };
   },
   methods: {
-    getFilteredPermissions(values){
-      this.$store.dispatch('getFilteredPermissions',{values: values}).then(()=>{
-        this.userData.selected_permissions =[];
-        this.filtered_permissions.forEach(item => {
-          if(!item.label.includes('delete')){
-            this.userData.selected_permissions.push(item.value);
-          }
+    getFilteredPermissions(values) {
+      this.$store
+        .dispatch("getFilteredPermissions", { values: values })
+        .then(() => {
+          this.userData.selected_permissions = [];
+          this.filtered_permissions.forEach((item) => {
+            if (!item.label.includes("delete")) {
+              this.userData.selected_permissions.push(item.value);
+            }
+          });
         });
-      });
     },
     createUser() {
       this.editMode = false;
@@ -239,34 +254,47 @@ export default {
       $("#exampleModal").modal("show");
     },
     storeUser() {
-
       this.$store.dispatch("storeUser", this.userData);
-
     },
     editUser(user) {
       this.editMode = true;
-      this.departmentData.id = department.id;
-      this.departmentData.name = department.name;
+
+      this.userData.id = user.id;
+      this.userData.department_id =
+        user.department_id == 0 ? "" : user.department_id;
+      this.userData.name = user.name;
+      this.userData.email = user.email;
+
+      this.userData.selected_roles = [];
+      this.userData.selected_permission_categories = [];
+      this.userData.selected_permissions = [];
+      user.roles.forEach((role) => {
+        this.userData.selected_roles.push(role.id);
+      });
+
+      let permissionsArray = [];
+      user.permissions.forEach((permission) => {
+        let permissions = permission.name.split("-");
+        permissionsArray.push(permissions[0]);
+      });
+      let uniqueItems = [...new Set(permissionsArray)];
+      this.userData.selected_permission_categories = uniqueItems;
+
+      this.$store
+        .dispatch("getFilteredPermissions", { values: uniqueItems })
+        .then(() => {
+          user.permissions.forEach((permission) => {
+            this.userData.selected_permissions.push(permission.id);
+          });
+        });
       $("#exampleModal").modal("show");
     },
     updateUser() {
-      //   this.departmentData.name == ""
-      //     ? (this.departmentErrors.name = true)
-      //     : (this.departmentErrors.name = false);
-      //   this.departmentData.director_id == ""
-      //     ? (this.departmentErrors.director_id = true)
-      //     : (this.departmentErrors.director_id = false);
-
-      //   if (this.departmentData.name && this.departmentData.director_id) {
-      this.$store.dispatch("updateDepartment", this.departmentData);
-      //   }
+      this.$store.dispatch("updateUser", this.userData);
     },
     deleteUser(user) {
-      this.$store.dispatch("deleteDepartment", department);
+      this.$store.dispatch("deleteUser", user);
     },
-    // testAction() {
-    //   this.$store.dispatch("testAction");
-    // },
   },
   mounted() {
     this.$store.dispatch("getUsers");
@@ -276,7 +304,6 @@ export default {
     this.$store.dispatch("getAuthRolesAndPermissions");
   },
   computed: {
-
     users() {
       return this.$store.getters.users;
     },

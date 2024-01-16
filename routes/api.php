@@ -30,5 +30,7 @@ Route::get('getAllRoles',[ApiController::class, 'getAllRoles'])->middleware('aut
 Route::get('getAllPermissions',[ApiController::class, 'getAllPermissions'])->middleware('auth:api');
 
 
-Route::post('storeUser', [UserController::class, 'storeUser']);
 Route::get('getUsers', [UserController::class, 'getUsers']);
+Route::post('storeUser', [UserController::class, 'storeUser']);
+Route::post('updateUser/{id}', [UserController::class, 'updateUser']);
+Route::post('deleteUser/{id}', [UserController::class, 'deleteUser']);

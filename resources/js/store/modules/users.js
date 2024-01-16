@@ -31,5 +31,27 @@ export default {
                     $("#exampleModal").modal("hide");
                 });
         },
+        updateUser: (context, userData) => {
+            userData
+                .post(
+                    window.url +
+                        "api/updateUser/" +
+                        userData.id
+                )
+                .then((response) => {
+                    context.dispatch('getUsers')
+                    $("#exampleModal").modal("hide");
+                });
+        },
+
+        deleteUser: (context, userData) => {
+            if (confirm("Are you sure you wanna delete this user?")) {
+                axios
+                  .post(window.url + "api/deleteUser/" + userData.id)
+                  .then(() => {
+                    context.dispatch('getUsers')
+                  });
+              }
+        }
     },
 };

@@ -14,7 +14,7 @@ class UserController extends Controller
     }
 
     public function getUsers(){
-        return response()->json(User::with('department')->get());
+        return response()->json(User::with('department')->with('roles')->with('permissions')->get());
     }
     public function storeUser(Request $request){
 
@@ -41,6 +41,48 @@ class UserController extends Controller
         $user->syncRoles($request->selected_roles);
         $user->syncPermissions($request->selected_permissions);
 
+        return response()->json('success');
+    }
+
+    public function updateUser(Request $request, $id){
+        $request->validate([
+            'name'             => 'required',
+            'email'            =>'required',
+           
+        ]);
+
+        $user = User::findOrFail($id);
+
+        if($request->department_id !=  ''){
+            $department_id = $request->department_id;
+        }else{
+            $department_id = 0;
+        }
+
+        if($request->password === null){
+            $password = $user->password;
+        }else{
+            $password = Hash::make($request->password);
+        }
+        
+        User::where('id', $id)->update([
+            'department_id'   => $department_id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $password
+        ]);
+
+        $user->syncRoles($request->selected_roles);
+        $user->syncPermissions($request->selected_permissions);
+
+        return response()->json('success');
+    }
+
+    public function deleteUser($id){
+        $user = User::findOrFail($id);//find user in database query
+        $user->roles()->detach();
+        $user->permissions()->detach();
+        $user->delete();
         return response()->json('success');
     }
 }
