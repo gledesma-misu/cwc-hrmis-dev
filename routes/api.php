@@ -20,17 +20,21 @@ use App\Http\Controllers\ApiController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('getDepartments',[DepartmentController::class, 'getDepartments'])->middleware('auth:api');
-Route::post('storeDepartment',[DepartmentController::class, 'storeDepartment']);
-Route::post('updateDepartment/{id}',[DepartmentController::class, 'updateDepartment']);
-Route::post('deleteDepartment/{id}',[DepartmentController::class, 'deleteDepartment']);
 
-Route::get('getAllDepartments',[ApiController::class, 'getAllDepartments'])->middleware('auth:api');
-Route::get('getAllRoles',[ApiController::class, 'getAllRoles'])->middleware('auth:api');
-Route::get('getAllPermissions',[ApiController::class, 'getAllPermissions'])->middleware('auth:api');
+Route::group(['middleware', ['foretojson','auth:api']], function(){
+    Route::get('getDepartments',[DepartmentController::class, 'getDepartments']);
+    Route::post('storeDepartment',[DepartmentController::class, 'storeDepartment']);
+    Route::post('updateDepartment/{id}',[DepartmentController::class, 'updateDepartment']);
+    Route::post('deleteDepartment/{id}',[DepartmentController::class, 'deleteDepartment']);
+
+    Route::get('getAllDepartments',[ApiController::class, 'getAllDepartments']);
+    Route::get('getAllRoles',[ApiController::class, 'getAllRoles']);
+    Route::get('getAllPermissions',[ApiController::class, 'getAllPermissions']);
 
 
-Route::get('getUsers', [UserController::class, 'getUsers']);
-Route::post('storeUser', [UserController::class, 'storeUser']);
-Route::post('updateUser/{id}', [UserController::class, 'updateUser']);
-Route::post('deleteUser/{id}', [UserController::class, 'deleteUser']);
+    Route::get('getUsers', [UserController::class, 'getUsers']);
+    Route::post('storeUser', [UserController::class, 'storeUser']);
+    Route::post('updateUser/{id}', [UserController::class, 'updateUser']);
+    Route::post('deleteUser/{id}', [UserController::class, 'deleteUser']);
+});
+
