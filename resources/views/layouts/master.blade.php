@@ -123,6 +123,7 @@
 
     @auth
         <script>
+            window.token = {!! json_encode(session()->get('token')) !!}
             window.auth_roles = {!! json_encode(auth()->user()->roles) !!};
             window.auth_permissions = {!! json_encode(auth()->user()->permissions) !!};
         </script>

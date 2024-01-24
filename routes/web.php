@@ -20,10 +20,11 @@ use App\Http\Controllers\PermissionController;
 */
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/', function() {
-    return redirect('/login')
-});
+// Route::get('/', function() {
+//     return redirect('/login')
+// });
 
 Route::get('/dashboard', [HomeController::class,'dashboard'])->name('dashboard');
 
