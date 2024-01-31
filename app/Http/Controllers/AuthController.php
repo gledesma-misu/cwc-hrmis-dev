@@ -35,6 +35,35 @@ class AuthController extends Controller
    }  
 
    public function logout(Request $request){
-    
+    $user = Auth::user();
+    DB::table('oauth_access_tokens')->where('id', $request->token_id)->where('user_id', $user->id)->update(['revoked' => 1]);
+
+    Auth::logout();
+
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+   }
+
+   public function register (Request $request){
+    $request->validate([
+        'email' => ['required', 'email'],
+        'name' => ['required'],
+        'password' => ['required', 'confirmed', 'min:6'],
+    ]);
+
+
+    User::create([
+        
+        'name'   => $request->name,
+        'email'   => $request->email,
+        'password'   => Hash::make($request->password),
+    ]);
+
+    Session::flash('success-message','Account created Successfully');
+
+    return redirect('/login');
+
    }
 }
