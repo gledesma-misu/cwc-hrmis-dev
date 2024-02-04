@@ -35,6 +35,43 @@
                 </div>
             </div>
 
+            <div class="card mt-2">
+                <div class="card-header bg-dark">
+                    <h5 class="text-light">Update Password</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{route('profilePasswordUpdate', $user->id)}}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="old_password">Old Password</label>
+                                    <input type="password" class="form-control" name="old_password" >
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="new_password">New Password</label>
+                                    <input type="password" class="form-control" name="new_password" >
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirm New Password</label>
+                                    <input type="password" class="form-control" name="password_confirmation" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success">Change Password</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

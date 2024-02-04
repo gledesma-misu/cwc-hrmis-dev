@@ -31,4 +31,8 @@ class ProfileController extends Controller
         Session::flash('success-message', 'Information updated successfully');
         return redirect()->route('profileIndex');
     }
+
+    public function passwordUpdate(Request $request, $id){
+         
+    }
 }
