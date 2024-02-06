@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Rules\MatchOldPassword;
 use Auth;
 use Session;
 
@@ -33,6 +34,11 @@ class ProfileController extends Controller
     }
 
     public function passwordUpdate(Request $request, $id){
-         
+         $request->validate([
+            'old_password' => ['required', new MatchOldPassword],
+             'password'  => ['required','confirmed'],
+             'password_confirmation' => ['required']
+            ]
+        );
     }
 }
