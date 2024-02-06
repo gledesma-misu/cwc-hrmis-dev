@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Auth;
 use Session;
+use Hash;
 
 class ProfileController extends Controller
 {
@@ -40,5 +41,10 @@ class ProfileController extends Controller
              'password_confirmation' => ['required']
             ]
         );
+
+        User::find($id)->update(['password' => Hash::make($request->password)]);
+
+        Session::flash('success-message', 'Password Updated Successfully');
+        return redirect()->route('profileIndex');
     }
 }

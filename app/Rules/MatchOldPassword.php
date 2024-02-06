@@ -14,8 +14,11 @@ class MatchOldPassword implements ValidationRule
      *
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function validate(string $attribute, mixed $value, Closure $fail)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return Hash::check($value, Auth::user()->password);
+        if(!Hash::check($value, Auth::user()->password)){
+            $fail('The old password does not match');
+        }
+        // return Hash::check($value, Auth::user()->password);
     }
 }
