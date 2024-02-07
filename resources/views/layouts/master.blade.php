@@ -56,6 +56,24 @@
                             </ul>
                         </li>
                     @endcan
+                    @can('employee')
+                        <li
+                            class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
+                            <a href="#homeSubmenu" data-toggle="collapse"
+                                aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}"
+                                class="dropdown-toggle" data-bs-toggle="collapse" role="button"
+                                aria-controls="homeSubmenu">Financial</a>
+                            <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}"
+                                id="homeSubmenu">
+                                <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                    <a href="{{ route('departmentsIndex') }}">Work Financial Plan (WFP)</a>
+                                </li>
+                                <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                    <a href="{{ route('departmentsIndex') }}">Project Procurement Management Plan (PPMP)</a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endcan
                     <li>
                         <a href="#">Tasks Inbox</a>
                     </li>

@@ -9,6 +9,7 @@ use App\Rules\MatchOldPassword;
 use Auth;
 use Session;
 use Hash;
+use Validator;
 
 class ProfileController extends Controller
 {
@@ -20,10 +21,20 @@ class ProfileController extends Controller
     }
 
     public function update(Request $request, $id){
-        $request->validate([
+        // $request->validate([
+        //     'name' => ['required'],
+        //     'email' => ['required', 'email', 'unique:users,email,'.$id]
+        // ]);
+
+        $validation = Validator::make($request->all(), [
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users,email,'.$id]
         ]);
+
+        if($validation->fails()){
+            return redirect()->back()->withErrors($validation);
+        }
+
 
         User::where('id', $id)->update([
             'name' => $request->name,
@@ -35,12 +46,17 @@ class ProfileController extends Controller
     }
 
     public function passwordUpdate(Request $request, $id){
-         $request->validate([
+       
+
+        $validation = Validator::make($request->all(), [
             'old_password' => ['required', new MatchOldPassword],
              'password'  => ['required','confirmed'],
              'password_confirmation' => ['required']
-            ]
-        );
+        ]);
+
+        if($validation->fails()){
+            return redirect()->back()->withErrors($validation);
+        }
 
         User::find($id)->update(['password' => Hash::make($request->password)]);
 

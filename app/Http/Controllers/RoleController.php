@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use Session;
+use Validator;
 
 class RoleController extends Controller
 {
     
     //For Laravel
     public function index(){
-        $roles = Role::all();
+        $roles = Role::orderBy('id','desc')->paginate(10);
         return view('management.roles.index', compact('roles'));
     }
 
@@ -23,11 +24,21 @@ class RoleController extends Controller
     public function store(Request $request){
 
 
-        $request->validate([
-            'name'           => ['required'],
-            'display_name'   => ['required'],
-            'description'    => ['required'],
+        // $request->validate([
+        //     'name'           => ['required'],
+        //     'display_name'   => ['required'],
+        //     'description'    => ['required'],
+        // ]);old validation
+
+        $validation = Validator::make($request->all(), [
+            'name'           => 'required',
+            'display_name'   => 'required',
+            'description'    => 'required'  
         ]);
+
+        if($validation->fails()){
+            return redirect()->back()->withErrors($validation);
+        }
 
         Role::create([
             'name'          => $request->name   , 
@@ -46,11 +57,21 @@ class RoleController extends Controller
     }
 
     public function update(Request $request, $id){
-        $request->validate([
-            'name'           => ['required'],
-            'display_name'   => ['required'],
-            'description'    => ['required'],
+        // $request->validate([
+        //     'name'           => ['required'],
+        //     'display_name'   => ['required'],
+        //     'description'    => ['required'],
+        // ]);old validation
+
+        $validation = Validator::make($request->all(), [
+            'name'           => 'required',
+            'display_name'   => 'required',
+            'description'    => 'required'  
         ]);
+
+        if($validation->fails()){
+            return redirect()->back()->withErrors($validation);
+        }
 
         Role::where('id', $id)->update([
             'name'          => $request->name   , 

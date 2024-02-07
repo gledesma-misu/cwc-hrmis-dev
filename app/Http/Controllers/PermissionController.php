@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Permission;
 use Session;
+use Validator;
 class PermissionController extends Controller
 {
     //For Laravel
     public function index(){
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('id', 'desc')->paginate(10);
         return view('management.permissions.index', compact('permissions'));
     }
 
@@ -21,11 +22,21 @@ class PermissionController extends Controller
     public function store(Request $request){
         // return $request->all();
         if($request->permission_type == 'basic'){
-            $request->validate([
+            // $request->validate([
+            //     'name'           => 'required',
+            //     'display_name'   => 'required',
+            //     'description'    => 'required'  
+            // ]); old validation
+
+            $validation = Validator::make($request->all(), [
                 'name'           => 'required',
                 'display_name'   => 'required',
                 'description'    => 'required'  
             ]);
+    
+            if($validation->fails()){
+                return redirect()->back()->withErrors($validation);
+            }
 
             Permission::create([
                 'name'               =>$request->name,
@@ -35,9 +46,17 @@ class PermissionController extends Controller
             Session::flash('success-message', 'Permission created successfully');
         }
         else if($request->permission_type == 'crud'){
-            $request->validate([
+            // $request->validate([
+            //     'resource'           => 'required',
+            // ]); old validation
+
+            $validation = Validator::make($request->all(), [
                 'resource'           => 'required',
             ]);
+    
+            if($validation->fails()){
+                return redirect()->back()->withErrors($validation);
+            }
             $crud = $request->crudSelected;
 
              if (count($crud) > 0){
@@ -65,11 +84,21 @@ class PermissionController extends Controller
     }
 
     public function update(Request $request, $id){
-        $request->validate([
+        // $request->validate([
+        //     'name'           => 'required',
+        //     'display_name'   => 'required',
+        //     'description'    => 'required'  
+        // ]); old validation
+
+        $validation = Validator::make($request->all(), [
             'name'           => 'required',
             'display_name'   => 'required',
             'description'    => 'required'  
         ]);
+
+        if($validation->fails()){
+            return redirect()->back()->withErrors($validation);
+        }
 
         Permission::where('id', $id)->update([
             'name'               =>$request->name,
