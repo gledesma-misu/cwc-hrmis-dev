@@ -33,7 +33,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(user, index) in users" :key="index">
+                <tr v-for="(user, index) in users.data" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ user.name }}</td>
                   <td>{{ user.email }}</td>
@@ -67,7 +67,12 @@
               </tbody>
             </table>
           </div>
-
+          <!-- table -->
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item" v-for="(link, index) in userLinks" :key="index"><a class="page-link" href="#" v-html="link.label"></a></li>
+            </ul>
+          </nav>
           <!-- Modal -->
           <div
             class="modal fade"
@@ -306,6 +311,9 @@ export default {
   computed: {
     users() {
       return this.$store.getters.users;
+    },
+    userLinks() {
+      return this.$store.getters.userLinks;
     },
     filtered_permissions() {
       return this.$store.getters.filtered_permissions;

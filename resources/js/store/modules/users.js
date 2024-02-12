@@ -2,17 +2,25 @@ import axios from "axios";
 
 export default {
     state: {
-        users: {},
+        users: [],
+        usersLinks: [],
     },
     getters: {
         users(state){
             return state.users
+        },
+        userLinks(state){
+            return state.userLinks
         }
     },
     mutations: {
         set_users: (state,data) => {
             state.users = data
-        }
+
+            state.userLinks = data.links
+
+            console.log(data);
+        },
     },
     actions: {
         getUsers: (context) => {
