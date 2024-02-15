@@ -67,12 +67,29 @@
               </tbody>
             </table>
           </div>
+
           <!-- table -->
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item" v-for="(link, index) in userLinks" :key="index"><a class="page-link" href="#" v-html="link.label"></a></li>
-            </ul>
-          </nav>
+          <div class="d-flex justify-content-center" v-if="departmentLinks.length > 3">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li
+                  :class="`page-item ${link.active ? 'active' : ''} ${
+                    !link.url ? 'disabled' : ''
+                  }`"
+                  v-for="(link, index) in userLinks"
+                  :key="index"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    v-html="link.label"
+                    @click.prevent="getResults(link)"
+                  ></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
           <!-- Modal -->
           <div
             class="modal fade"
@@ -239,6 +256,14 @@ export default {
     };
   },
   methods: {
+    getResults(link) {
+      if(!link.url || link.active){
+        return;
+      }
+      else{
+        this.$store.dispatch('getUsersResults', link);
+      }
+    },
     getFilteredPermissions(values) {
       this.$store
         .dispatch("getFilteredPermissions", { values: values })

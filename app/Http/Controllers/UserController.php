@@ -14,7 +14,7 @@ class UserController extends Controller
     }
 
     public function getUsers(){
-        return response()->json(User::with('department')->with('roles')->with('permissions')->paginate(1));
+        return response()->json(User::with('department')->with('roles')->with('permissions')->latest()->paginate(19));
     }
     public function storeUser(Request $request){
 
