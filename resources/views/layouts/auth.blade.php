@@ -21,11 +21,13 @@
                         <img src="{{ asset('public/images/auth.png') }}" alt="auth" width="100%">
                     </div>
                     <div class="col-md-6">
-                    @if (Session::has('success-message'))
-                          <p class="text-success text-center">
-                    {{ Session::get('success-message') }}
-                        </p>
-                      @endif
+                        @if (Session::has('success-message'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ Session::get('success-message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
                         @yield('content')
                     </div>
                 </div>

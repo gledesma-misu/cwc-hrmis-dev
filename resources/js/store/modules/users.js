@@ -57,6 +57,10 @@ export default {
                 console.log(response.data);
                 $("#exampleModal").modal("hide");
             });
+            window.Toast.fire({
+                icon: "success",
+                title: "User created successfully!"
+              });
         },
         updateUser: (context, userData) => {
             userData
@@ -65,6 +69,10 @@ export default {
                     context.dispatch("getUsers");
                     $("#exampleModal").modal("hide");
                 });
+                window.Toast.fire({
+                    icon: "success",
+                    title: "User updated successfully!"
+                  });
         },
 
         deleteUser: (context, userData) => {

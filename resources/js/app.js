@@ -12,6 +12,23 @@ import PermissionsCreate from './components/permissions/PermissionsCreate.vue';
 
 import Form from 'vform'
 window.Form = Form;
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+
+  window.Toast = Toast;
+
 const app = createApp({})
 
 app.component('logout-component', LogoutComponent);

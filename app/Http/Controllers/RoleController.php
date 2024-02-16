@@ -86,7 +86,7 @@ class RoleController extends Controller
 
     public function delete($id){
         // Role::where('id', $id)->delete();
-        Session::flash('success-message', 'Role deleted successfully');
+        Session::flash('success-message', 'Role deleted successfully *disable muna ang delete');
         return redirect()->route('rolesIndex');
     }
 

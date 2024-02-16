@@ -57,6 +57,11 @@ export default {
                     context.dispatch('getDepartments')
                     $("#exampleModal").modal("hide");
                 });
+
+                window.Toast.fire({
+                    icon: "success",
+                    title: "Department created successfully!"
+                  });
         },
         updateDepartment: (context, departmentData) => {
             departmentData
@@ -69,6 +74,12 @@ export default {
                     context.dispatch('getDepartments')
                     $("#exampleModal").modal("hide");
                 });
+
+                window.Toast.fire({
+                    icon: "success",
+                    title: "Department updated successfully!"
+                  });
+                
         },
         deleteDepartment: (context, departmentData) => {
             if (confirm("Are you sure you wanna delete this department?")) {
