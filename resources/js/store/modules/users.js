@@ -3,7 +3,7 @@ import axios from "axios";
 export default {
     state: {
         users: [],
-        usersLinks: [],
+        userLinks: [],
     },
     getters: {
         users(state) {
@@ -21,7 +21,7 @@ export default {
             for (let i = 0; i < data.links.length; i++) {
                 if (
                     i === 1 ||
-                    i === Number(data.links.length -2) ||
+                    i === Number(data.links.length - 2) ||
                     data.links[i].active ||
                     isNaN(data.links[i].label) ||
                     Number(data.links[i].label) ===
@@ -29,7 +29,7 @@ export default {
                     Number(data.links[i].label) ===
                         Number(data.current_page - 1)
                 ) {
-                    state.userLinks.push(data.links[i])
+                    state.userLinks.push(data.links[i]);
                 }
             }
 
@@ -53,14 +53,14 @@ export default {
         },
         storeUser: (context, userData) => {
             userData.post(window.url + "api/storeUser").then((response) => {
-                // context.dispatch("getUsers");
+                context.dispatch("getUsers");
                 console.log(response.data);
                 $("#exampleModal").modal("hide");
             });
             window.Toast.fire({
                 icon: "success",
-                title: "User created successfully!"
-              });
+                title: "User created successfully!",
+            });
         },
         updateUser: (context, userData) => {
             userData
@@ -69,20 +69,22 @@ export default {
                     context.dispatch("getUsers");
                     $("#exampleModal").modal("hide");
                 });
-                window.Toast.fire({
-                    icon: "success",
-                    title: "User updated successfully!"
-                  });
+            window.Toast.fire({
+                icon: "success",
+                title: "User updated successfully!",
+            });
         },
 
         deleteUser: (context, userData) => {
-            if (confirm("Are you sure you wanna delete this user?")) {
-                axios
-                    .post(window.url + "api/deleteUser/" + userData.id)
-                    .then(() => {
-                        context.dispatch("getUsers");
+            axios
+                .post(window.url + "api/deleteUser/" + userData.id)
+                .then(() => {
+                    window.Toast.fire({
+                        icon: "success",
+                        title: "User deleted successfully!",
                     });
-            }
+                    context.dispatch("getUsers");
+                });
         },
     },
 };

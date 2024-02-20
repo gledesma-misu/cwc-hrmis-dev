@@ -33,7 +33,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(department, index) in departments.data" :key="index">
+                <tr
+                  v-for="(department, index) in departments.data"
+                  :key="index"
+                >
                   <td>{{ index + 1 }}</td>
                   <td>{{ department.name }}</td>
 
@@ -65,7 +68,10 @@
           </div>
 
           <!-- pagination -->
-          <div class="d-flex justify-content-center" v-if="departmentLinks.length > 3">
+          <div
+            class="d-flex justify-content-center"
+            v-if="departmentLinks.length > 3"
+          >
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                 <li
@@ -164,21 +170,18 @@ export default {
       departmentData: new Form({
         id: "",
         name: "",
-       
       }),
       departmentErrors: {
         name: false,
-
       },
     };
   },
   methods: {
     getResults(link) {
-      if(!link.url || link.active){
+      if (!link.url || link.active) {
         return;
-      }
-      else{
-        this.$store.dispatch('getDepartmentsResults', link);
+      } else {
+        this.$store.dispatch("getDepartmentsResults", link);
       }
     },
     createDepartment() {
@@ -218,7 +221,20 @@ export default {
       //   }
     },
     deleteDepartment(department) {
-      this.$store.dispatch("deleteDepartment", department);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$store.dispatch("deleteDepartment", department);
+        }
+      });
+      
     },
     // testAction() {
     //   this.$store.dispatch("testAction");

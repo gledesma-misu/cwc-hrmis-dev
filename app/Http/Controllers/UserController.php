@@ -14,7 +14,7 @@ class UserController extends Controller
     }
 
     public function getUsers(){
-        return response()->json(User::with('department')->with('roles')->with('permissions')->latest()->paginate(19));
+        return response()->json(User::with('department')->with('roles')->with('permissions')->latest()->paginate(10));
     }
     public function storeUser(Request $request){
 
@@ -32,7 +32,7 @@ class UserController extends Controller
         }
         
         $user = User::create([
-            'department_id'   => $department_id,
+            // 'department_id'   => $department_id, NO DEPARTMENT_ID FOUND IN DB
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)

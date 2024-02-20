@@ -17,7 +17,7 @@ class DepartmentController extends Controller
     //below for VUE Js
     public function getDepartments(){
         
-        return response()->json(Department::latest()->paginate(1));
+        return response()->json(Department::latest()->paginate(10));
     }
     public function storeDepartment(Request $request){
 

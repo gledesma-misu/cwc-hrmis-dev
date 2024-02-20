@@ -69,7 +69,10 @@
           </div>
 
           <!-- table -->
-          <div class="d-flex justify-content-center" v-if="departmentLinks.length > 3">
+          <div
+            class="d-flex justify-content-center"
+            v-if="userLinks.length > 3"
+          >
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                 <li
@@ -257,11 +260,10 @@ export default {
   },
   methods: {
     getResults(link) {
-      if(!link.url || link.active){
+      if (!link.url || link.active) {
         return;
-      }
-      else{
-        this.$store.dispatch('getUsersResults', link);
+      } else {
+        this.$store.dispatch("getUsersResults", link);
       }
     },
     getFilteredPermissions(values) {
@@ -323,7 +325,20 @@ export default {
       this.$store.dispatch("updateUser", this.userData);
     },
     deleteUser(user) {
-      this.$store.dispatch("deleteUser", user);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$store.dispatch("deleteUser", user);
+        }
+      });
+      
     },
   },
   mounted() {

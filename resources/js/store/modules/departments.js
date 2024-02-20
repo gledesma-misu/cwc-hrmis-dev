@@ -87,6 +87,10 @@ export default {
                   .post(window.url + "api/deleteDepartment/" + departmentData.id)
                   .then(() => {
                     context.dispatch('getDepartments')
+                    window.Toast.fire({
+                        icon: "success",
+                        title: "Department deleted successfully!"
+                      });
                   });
               }
         }
