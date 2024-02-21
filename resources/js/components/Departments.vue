@@ -4,15 +4,31 @@
       <div class="card">
         <div class="card-header bg-dark">
           <h5 class="float-start text-light">Departments List</h5>
-          <button
-            class="btn btn-success float-end"
-            @click="createDepartment"
-            v-if="current_permissions.has('departments-create')"
-          >
+          <button class="btn btn-success float-end" @click="createDepartment"
+            v-if="current_permissions.has('departments-create')">
             New Department
           </button>
         </div>
         <div class="card-body">
+          <!-- search filter -->
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="search_type">Search Type</label>
+                <select name="search_type" class="form-control" v-model="searchData.search_type">
+                  <option value="name">Name</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="search_value">Search Value</label>
+                <input type="text" name="search_value" class="form-control" v-model="searchData.search_value"
+                  @keyup="searchDepartment">
+              </div>
+            </div>
+
+          </div>
           <!-- <button @click="testAction" class="btn btn-info">Test</button> -->
           <!-- {{ test }} -->
           <div class="table-responsive">
@@ -21,43 +37,28 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
-                  <th
-                    v-if="
-                      current_permissions.has(
-                        'departments-update' || has('departments-delete')
-                      )
-                    "
-                  >
+                  <th v-if="current_permissions.has(
+                    'departments-update' || has('departments-delete')
+                  )
+                    ">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="(department, index) in departments.data"
-                  :key="index"
-                >
+                <tr v-for="(department, index) in departments.data" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ department.name }}</td>
 
-                  <td
-                    v-if="
-                      current_permissions.has(
-                        'departments-update' || has('departments-delete')
-                      )
-                    "
-                  >
-                    <button
-                      class="btn btn-success mx-1"
-                      @click="editDepartment(department)"
-                    >
+                  <td v-if="current_permissions.has(
+                    'departments-update' || has('departments-delete')
+                  )
+                    ">
+                    <button class="btn btn-success mx-1" @click="editDepartment(department)">
                       <i class="fa fa-edit"></i>
                       Edit
                     </button>
-                    <button
-                      class="btn btn-danger mx-1"
-                      @click="deleteDepartment(department)"
-                    >
+                    <button class="btn btn-danger mx-1" @click="deleteDepartment(department)">
                       <i class="fa fa-trash"></i>
                       Delete
                     </button>
@@ -68,67 +69,35 @@
           </div>
 
           <!-- pagination -->
-          <div
-            class="d-flex justify-content-center"
-            v-if="departmentLinks.length > 3"
-          >
+          <div class="d-flex justify-content-center" v-if="departmentLinks.length > 3">
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li
-                  :class="`page-item ${link.active ? 'active' : ''} ${
-                    !link.url ? 'disabled' : ''
-                  }`"
-                  v-for="(link, index) in departmentLinks"
-                  :key="index"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    v-html="link.label"
-                    @click.prevent="getResults(link)"
-                  ></a>
+                <li :class="`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''
+                  }`" v-for="(link, index) in departmentLinks" :key="index">
+                  <a class="page-link" href="#" v-html="link.label" @click.prevent="getResults(link)"></a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <!-- Modal -->
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">
                     {{ !editMode ? "Create Department" : "Update Department" }}
                   </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="name">Name</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          name="name"
-                          v-model="departmentData.name"
-                        />
-                        <div
-                          class="text-danger"
-                          v-if="departmentData.errors.has('name')"
-                          v-html="departmentData.errors.get('name')"
-                        />
+                        <input type="text" class="form-control" name="name" v-model="departmentData.name" />
+                        <div class="text-danger" v-if="departmentData.errors.has('name')"
+                          v-html="departmentData.errors.get('name')" />
                         <!-- <p class="text-danger" v-if="departmentErrors.name">
                           Name is required
                         </p> -->
@@ -137,18 +106,11 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Close
                   </button>
-                  <button
-                    type="button"
-                    @click="!editMode ? storeDepartment() : updateDepartment()"
-                    class="btn btn-success"
-                  >
+                  <button type="button" @click="!editMode ? storeDepartment() : updateDepartment()"
+                    class="btn btn-success">
                     {{ !editMode ? "Store" : "Save Changes" }}
                   </button>
                 </div>
@@ -174,9 +136,16 @@ export default {
       departmentErrors: {
         name: false,
       },
+      searchData: {
+        search_type: 'name',
+        search_value: '',
+      }
     };
   },
   methods: {
+    searchDepartment() {
+      this.$store.dispatch('searchDepartment', this.searchData)
+    },
     getResults(link) {
       if (!link.url || link.active) {
         return;
@@ -234,7 +203,7 @@ export default {
           this.$store.dispatch("deleteDepartment", department);
         }
       });
-      
+
     },
     // testAction() {
     //   this.$store.dispatch("testAction");

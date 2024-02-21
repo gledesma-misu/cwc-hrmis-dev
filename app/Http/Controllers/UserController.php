@@ -9,6 +9,17 @@ use App\Models\User;
 use Hash;
 class UserController extends Controller
 {
+    public function searchUser(){
+        if($search = \Request::get('name')){
+            $user = User::where(function($query) use ($search){
+                $query->where('name', 'LIKE', "%$search%")
+                ->orWhere('email', 'LIKE', "%$search%");
+            })->with('department')->with('roles')->with('permissions')->latest()->paginate(10);
+        }else{
+           $user = User::with('department')->with('roles')->with('permissions')->latest()->paginate(10);
+        }
+        return response()->json($user);
+    }
     public function index(){
         return view('management.users.index');
     }

@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['forcetojson', 'auth:api'])->group(function() {
 
     Route::controller(DepartmentController::class)->group(function(){
+        Route::get('searchDepartment', 'searchDepartment')->middleware('permission:departments-read');
         Route::get('getDepartments', 'getDepartments')->middleware('permission:departments-read');
         Route::post('storeDepartment', 'storeDepartment')->middleware('permission:departments-create');
         Route::post('updateDepartment/{id}', 'updateDepartment')->middleware('permission:departments-update');
@@ -35,6 +36,7 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
         Route::get('getAllPermissions', 'getAllPermissions')->middleware('permission:permission-read');
     });
     Route::controller(UserController::class)->group(function(){
+        Route::get('searchUser', 'searchUser')->middleware('permission:users-read');
         Route::get('getUsers', 'getUsers')->middleware('permission:users-read');
         Route::post('storeUser', 'storeUser')->middleware('permission:users-create');
         Route::post('updateUser/{id}', 'updateUser')->middleware('permission:users-update');
