@@ -1,6 +1,39 @@
 @extends('layouts.master')
 
 @section('content')
+    <div class="row my-2">
+        <div class="col-md-12">
+            <form action="{{ route('permissionsSearch') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="search_type">Search Type</label>
+                            <select name="search_type" class="form-control">
+                                <option value="name" selected>Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="search_value">Search Value</label>
+                            <input type="text" name="search_value" class="form-control"
+                                value="{{ isset($search_value) ? $search_value : old('search_value') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                        <button type="submit" class="btn btn-success mt-3 mx-1">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        @if (Request::is('permissions/search'))
+                            <a href="{{ route('permissionsIndex') }}" class="btn btn-danger mt-3 mx-1">
+                                <i class="fa fa-times"></i></a>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header bg-dark">
             <div class="row">
@@ -43,19 +76,21 @@
                                             <td>
                                                 @can('permission-update')
                                                     <div class="float-left mx-1">
-                                                        <a href="{{ route('permissionsEdit', $permission->id) }}" class="btn btn-success">
+                                                        <a href="{{ route('permissionsEdit', $permission->id) }}"
+                                                            class="btn btn-success">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                     </div>
                                                 @endcan
                                                 @can('permission-delete')
                                                     <div class="float-left mx-1">
-                                                        <form action="{{ route('permissionsDelete', $permission->id) }}" method="POST">
+                                                        @include('management.permissions.delete')
+                                                        {{-- <form action="{{ route('permissionsDelete', $permission->id) }}" method="POST">
                                                             @csrf
                                                             <button class="btn btn-danger">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
-                                                        </form>
+                                                        </form> --}}
                                                     </div>
                                                 @endcan
                                             </td>
