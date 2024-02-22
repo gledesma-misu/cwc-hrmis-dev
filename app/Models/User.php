@@ -52,4 +52,8 @@ class User extends Authenticatable implements LaratrustUser
     public function department(){
         return $this->belongsTo('App\Models\Department');
     }
+
+    public function tasks(){
+        return $this->belongsToMany('App\Models\Task');
+    }
 }

@@ -43,7 +43,7 @@ class UserController extends Controller
         }
         
         $user = User::create([
-            // 'department_id'   => $department_id, NO DEPARTMENT_ID FOUND IN DB
+            'department_id'   => $department_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
@@ -77,7 +77,7 @@ class UserController extends Controller
         }
         
         User::where('id', $id)->update([
-            // 'department_id'   => $department_id,
+            'department_id'   => $department_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => $password
