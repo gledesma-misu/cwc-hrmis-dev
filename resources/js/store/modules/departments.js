@@ -22,7 +22,7 @@ export default {
             for (let i = 0; i < data.links.length; i++) {
                 if (
                     i === 1 ||
-                    i === Number(data.links.length -2) ||
+                    i === Number(data.links.length - 2) ||
                     data.links[i].active ||
                     isNaN(data.links[i].label) ||
                     Number(data.links[i].label) ===
@@ -30,20 +30,25 @@ export default {
                     Number(data.links[i].label) ===
                         Number(data.current_page - 1)
                 ) {
-                    state.departmentLinks.push(data.links[i])
+                    state.departmentLinks.push(data.links[i]);
                 }
             }
         },
     },
     actions: {
         searchDepartment: (context, searchData) => {
-            setTimeout(function(){
-                axios.get(`${window.url}api/searchDepartment?${searchData.search_type}=${searchData.search_value}`).then((response) => {
-                    context.commit("set_departments", response.data);
-                }).catch(err => {
-                    console.log(err);
-                });
-            })
+            setTimeout(function () {
+                axios
+                    .get(
+                        `${window.url}api/searchDepartment?${searchData.search_type}=${searchData.search_value}`
+                    )
+                    .then((response) => {
+                        context.commit("set_departments", response.data);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            });
         },
         getDepartmentsResults: (context, link) => {
             axios.get(link.url).then((response) => {
@@ -63,45 +68,42 @@ export default {
                 .post(window.url + "api/storeDepartment")
                 .then((response) => {
                     // this.getDepartments();
-                    context.dispatch('getDepartments')
+                    context.dispatch("getDepartments");
                     $("#exampleModal").modal("hide");
+                    window.Toast.fire({
+                        icon: "success",
+                        title: "Department created successfully!",
+                    });
                 });
-
-                window.Toast.fire({
-                    icon: "success",
-                    title: "Department created successfully!"
-                  });
         },
         updateDepartment: (context, departmentData) => {
             departmentData
-                .post(
-                    window.url +
-                        "api/updateDepartment/" +
-                        departmentData.id
-                )
+                .post(window.url + "api/updateDepartment/" + departmentData.id)
                 .then((response) => {
-                    context.dispatch('getDepartments')
+                    context.dispatch("getDepartments");
                     $("#exampleModal").modal("hide");
+                    window.Toast.fire({
+                        icon: "success",
+                        title: "Department updated successfully!",
+                    });
                 });
 
-                window.Toast.fire({
-                    icon: "success",
-                    title: "Department updated successfully!"
-                  });
-                
+            
         },
         deleteDepartment: (context, departmentData) => {
             if (confirm("Are you sure you wanna delete this department?")) {
                 axios
-                  .post(window.url + "api/deleteDepartment/" + departmentData.id)
-                  .then(() => {
-                    context.dispatch('getDepartments')
-                    window.Toast.fire({
-                        icon: "success",
-                        title: "Department deleted successfully!"
-                      });
-                  });
-              }
-        }
+                    .post(
+                        window.url + "api/deleteDepartment/" + departmentData.id
+                    )
+                    .then(() => {
+                        context.dispatch("getDepartments");
+                        window.Toast.fire({
+                            icon: "success",
+                            title: "Department deleted successfully!",
+                        });
+                    });
+            }
+        },
     },
 };

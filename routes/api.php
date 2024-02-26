@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
         Route::get('getAllDepartments', 'getAllDepartments')->middleware('permission:departments-read');
         Route::get('getAllRoles', 'getAllRoles')->middleware('permission:roles-read');
         Route::get('getAllPermissions', 'getAllPermissions')->middleware('permission:permission-read');
-        Route::get('getAllUsers', 'getAllUsers')->middleware('permission:tasks-read');
+        Route::get('getAllUsers', 'getAllUsers')->middleware('permission:tasks-create');
     });
     Route::controller(UserController::class)->group(function(){
         Route::get('searchUser', 'searchUser')->middleware('permission:users-read');
@@ -43,7 +44,12 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
         Route::post('updateUser/{id}', 'updateUser')->middleware('permission:users-update');
         Route::post('deleteUser/{id}', 'deleteUser')->middleware('permission:users-delete');
     });
+
+    Route::controller(TaskController::class)->group(function () {
+        Route::get('getTasks', 'getTasks')->middleware('permission:tasks-read');
+        Route::post('storeTask', 'storeTask')->middleware('permission:tasks-create');
     });
+});
     
 Route::group(['middleware', ['foretojson','auth:api']], function(){
 });
