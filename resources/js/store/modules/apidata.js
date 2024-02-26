@@ -7,6 +7,7 @@ export default {
         filtered_permission_categories: [],
         filtered_permissions: [],
         all_permissions: [],
+        filtered_users: [],
     },
     getters: {
         filtered_departments(state){
@@ -20,6 +21,9 @@ export default {
         },
         filtered_permissions(state){
             return state.filtered_permissions;
+        },
+        filtered_users(state){
+            return state.filtered_users;
         }
     },
     mutations: {
@@ -64,6 +68,26 @@ export default {
             })
            });
         },
+        set_all_users: (state, data) => {
+           state.filtered_users = [];
+          window.auth_roles.map(role => {
+            if(role.name === 'director'){
+                data.forEach(user => {
+                    if(user.department_id === window.auth_user.department_id && user.id !== window.auth_user.id){
+                        state.filtered_users.push({
+                            value: user.id,
+                            label :user.name
+                        });
+                    }
+                })
+            }
+            if(role.name === 'manager'){
+
+            }
+
+
+          });
+        },
     },
     actions: {
         getAllDepartments: (context) => {
@@ -86,6 +110,12 @@ export default {
         },
         getFilteredPermissions: (context, data) => {
             context.commit('set_filtered_permissions', data);
+        },
+        getAllUsers: (context, data) => {
+            axios.get(`${window.url}api/getAllUsers`).then((response) => {
+                // console.log(response.data);
+                context.commit("set_all_users", response.data);
+            });
         },
     },
 };

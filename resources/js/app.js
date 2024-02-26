@@ -7,8 +7,9 @@ import Multiselect from '@vueform/multiselect';
 import '@vueform/multiselect/themes/default.css';
 import Departments from './components/Departments.vue';
 import LogoutComponent from './components/auth/LogoutComponent.vue';
-import Users from './components/users/Users.vue';
 import PermissionsCreate from './components/permissions/PermissionsCreate.vue';
+import Users from './components/users/Users.vue';
+import Tasks from './components/tasks/Tasks.vue';
 
 import Form from 'vform'
 window.Form = Form;
@@ -33,9 +34,10 @@ const app = createApp({})
 
 app.component('logout-component', LogoutComponent);
 app.component('departments', Departments);
-app.component('users', Users);
 app.component('permissions-create', PermissionsCreate);
 app.component('multi-select', Multiselect);
+app.component('users', Users);
+app.component('tasks', Tasks);
 
 window.url = '/cwc-hrmis/'
 

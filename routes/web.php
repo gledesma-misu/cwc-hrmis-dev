@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('profile/index', 'index')->name('profileIndex')->middleware('permission:profile-read');
         Route::post('profile/update/{id}', 'update')->name('profileUpdate')->middleware('permission:profile-update');
         Route::post('profile/password/update/{id}', 'passwordUpdate')->name('profilePasswordUpdate')->middleware('permission:profile-password-update');
+    });
+
+    Route::controller(TaskController::class)->group(function() {
+        Route::get('tasks/index', 'tasksIndex')->name('tasksIndex')->middleware('permission:tasks-read');
     });
     
 });

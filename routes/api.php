@@ -34,6 +34,7 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
         Route::get('getAllDepartments', 'getAllDepartments')->middleware('permission:departments-read');
         Route::get('getAllRoles', 'getAllRoles')->middleware('permission:roles-read');
         Route::get('getAllPermissions', 'getAllPermissions')->middleware('permission:permission-read');
+        Route::get('getAllUsers', 'getAllUsers')->middleware('permission:tasks-read');
     });
     Route::controller(UserController::class)->group(function(){
         Route::get('searchUser', 'searchUser')->middleware('permission:users-read');
