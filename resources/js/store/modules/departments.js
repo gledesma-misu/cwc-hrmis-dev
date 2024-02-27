@@ -91,7 +91,7 @@ export default {
             
         },
         deleteDepartment: (context, departmentData) => {
-            if (confirm("Are you sure you wanna delete this department?")) {
+            // if (confirm("Are you sure you wanna delete this department?")) {
                 axios
                     .post(
                         window.url + "api/deleteDepartment/" + departmentData.id
@@ -103,7 +103,7 @@ export default {
                             title: "Department deleted successfully!",
                         });
                     });
-            }
+            // }
         },
     },
 };

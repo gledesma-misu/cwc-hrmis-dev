@@ -71,8 +71,10 @@
                   <td>
                     <span
                       :class="`badge ${
-                        task.priority == 'Urgent'
-                      } ? 'badge-danger' : 'badge-success'`"
+                        task.priority === 'Urgent'
+                          ? 'badge-danger'
+                          : 'badge-success'
+                      }`"
                     >
                       {{ task.priority }}
                     </span>
@@ -80,9 +82,13 @@
                   <td>{{ task.start_date }}</td>
                   <td>{{ task.end_date }}</td>
                   <td>
-                    {{ task.description.length <= 10 ? task.description : task.description.substr(0, 10) + '...' }}
+                    {{
+                      task.description.length <= 10
+                        ? task.description
+                        : task.description.substr(0, 10) + "..."
+                    }}
                   </td>
-                  <td>{{ task.user.length }} Staff Members</td>
+                  <td>{{ task.users.length }} Staff Member/s</td>
                   <td
                     v-if="
                       current_permissions.has(
@@ -92,14 +98,14 @@
                   >
                     <button
                       class="btn btn-success mx-1"
-                      @click="editDepartment(department)"
+                      @click="editTask(task)"
                     >
                       <i class="fa fa-edit"></i>
                       Edit
                     </button>
                     <button
                       class="btn btn-danger mx-1"
-                      @click="deleteDepartment(department)"
+                      @click="deleteTask(task)"
                     >
                       <i class="fa fa-trash"></i>
                       Delete
@@ -111,16 +117,29 @@
           </div>
 
           <!-- pagination -->
-          <!-- <div class="d-flex justify-content-center" v-if="departmentLinks.length > 3">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li :class="`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''
-                                    }`" v-for="(link, index) in departmentLinks" :key="index">
-                                    <a class="page-link" href="#" v-html="link.label" @click.prevent="getResults(link)"></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div> -->
+          <div
+            class="d-flex justify-content-center"
+            v-if="tasksLinks.length > 3"
+          >
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li
+                  :class="`page-item ${link.active ? 'active' : ''} ${
+                    !link.url ? 'disabled' : ''
+                  }`"
+                  v-for="(link, index) in tasksLinks"
+                  :key="index"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    v-html="link.label"
+                    @click.prevent="getResults(link)"
+                  ></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
           <!-- Modal -->
           <div
@@ -170,7 +189,7 @@
                           v-model="taskData.priority"
                         >
                           <option value="Urgent">Urgent</option>
-                          <option value="Not Urgernt">Not Urgent</option>
+                          <option value="Not Urgent">Not Urgent</option>
                         </select>
                         <div
                           class="text-danger"
@@ -258,7 +277,7 @@
                   </button>
                   <button
                     type="button"
-                    @click="!editMode ? storeTask() : updateDepartment()"
+                    @click="!editMode ? storeTask() : updateTask()"
                     class="btn btn-success"
                   >
                     {{ !editMode ? "Store" : "Save Changes" }}
@@ -281,6 +300,9 @@ export default {
     this.$store.dispatch("getAuthRolesAndPermissions");
   },
   computed: {
+    tasksLinks() {
+      return this.$store.getters.tasksLinks;
+    },
     tasks() {
       return this.$store.getters.tasks;
     },
@@ -314,6 +336,13 @@ export default {
     };
   },
   methods: {
+    getResults(link) {
+      if (!link.url || link.active) {
+        return;
+      } else {
+        this.$store.dispatch("getTasksResults", link);
+      }
+    },
     createTask() {
       this.editMode = false;
       this.taskData.reset();
@@ -323,6 +352,42 @@ export default {
     storeTask() {
       this.$store.dispatch("storeTask", this.taskData);
     },
+    editTask(task){
+      this.editMode = true;
+      this.taskData.reset();
+      this.taskData.clear();
+
+      this.taskData.id = task.id
+      this.taskData.title = task.title
+      this.taskData.priority = task.priority
+      this.taskData.start_date = task.start_date
+      this.taskData.end_date = task.end_date
+      this.taskData.description = task.description
+
+      task.users.forEach(user => {
+        this.taskData.assign_to.push(user.id)
+      });
+
+      $("#exampleModal").modal("show");
+    },
+    updateTask(){
+      this.$store.dispatch("updateTask", this.taskData);
+    },
+    deleteTask(task) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$store.dispatch("deleteTask", task);
+        }
+      });
+    }
   },
 };
 </script>
