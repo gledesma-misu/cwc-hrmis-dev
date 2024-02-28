@@ -4,14 +4,19 @@ export default {
     state: {
         // departments_test: 0,
         tasks: [],
+        inbox_tasks: [],
         tasksLinks: [],
+        inboxTasksLinks: [],
     },
     getters: {
         tasks(state) {
             return state.tasks;
         },
-        tasksLinks(state) {
-            return state.tasksLinks;
+        inbox_tasks(state) {
+            return state.inbox_tasks;
+        },
+        inboxTasksLinks(state) {
+            return state.inboxTasksLinks;
         },
        
     },
@@ -37,9 +42,9 @@ export default {
             }
         },
         set_inbox_tasks: (state, data) => {
-            state.tasks = data;
-            console.log(data);
-            state.tasksLinks = [];
+            state.inbox_tasks = data;
+
+            state.inboxTasksLinks = [];
 
             for (let i = 0; i < data.links.length; i++) {
                 if (
@@ -52,7 +57,7 @@ export default {
                     Number(data.links[i].label) ===
                         Number(data.current_page - 1)
                 ) {
-                    state.tasksLinks.push(data.links[i]);
+                    state.inboxTasksLinks.push(data.links[i]);
                 }
             }
         },
@@ -74,6 +79,13 @@ export default {
                 // console.log(response.data);
             });
         },
+        getInboxTasksResults: (context, link) => {
+            axios.get(link.url).then((response) => {
+                // console.log(response.data);
+                context.commit("set_inbox_tasks", response.data);
+                // console.log(response.data);
+            });
+        },
         getTasks: (context) => {
             axios.get(`${window.url}api/getTasks`).then((response) => {
                 // console.log(response.data);
@@ -89,7 +101,7 @@ export default {
         storeTask: (context, taskData) => {
             taskData.post(window.url + "api/storeTask").then((response) => {
                 // this.getDepartments();
-                // context.dispatch('getTasks')
+                context.dispatch('getTasks')
                 $("#exampleModal").modal("hide");
                 window.Toast.fire({
                     icon: "success",
