@@ -36,6 +36,26 @@ export default {
                 }
             }
         },
+        set_inbox_tasks: (state, data) => {
+            state.tasks = data;
+            console.log(data);
+            state.tasksLinks = [];
+
+            for (let i = 0; i < data.links.length; i++) {
+                if (
+                    i === 1 ||
+                    i === Number(data.links.length - 2) ||
+                    data.links[i].active ||
+                    isNaN(data.links[i].label) ||
+                    Number(data.links[i].label) ===
+                        Number(data.current_page + 1) ||
+                    Number(data.links[i].label) ===
+                        Number(data.current_page - 1)
+                ) {
+                    state.tasksLinks.push(data.links[i]);
+                }
+            }
+        },
     },
     actions: {
         // searchDepartment: (context, searchData) => {
@@ -58,6 +78,12 @@ export default {
             axios.get(`${window.url}api/getTasks`).then((response) => {
                 // console.log(response.data);
                 context.commit("set_tasks", response.data);
+            });
+        },
+        getInboxTasks: (context) => {
+            axios.get(`${window.url}api/getInboxTasks`).then((response) => {
+                // console.log(response.data);
+                context.commit("set_inbox_tasks", response.data);
             });
         },
         storeTask: (context, taskData) => {

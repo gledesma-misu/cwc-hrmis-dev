@@ -23,6 +23,7 @@ class User extends Authenticatable implements LaratrustUser
      */
     protected $fillable = [
         'department_id',
+        'user_level',
         'name',
         'email',
         'password',
@@ -54,6 +55,6 @@ class User extends Authenticatable implements LaratrustUser
     }
 
     public function tasks(){
-        return $this->belongsToMany('App\Models\Task');
+        return $this->belongsToMany('App\Models\Task')->with('users');
     }
 }

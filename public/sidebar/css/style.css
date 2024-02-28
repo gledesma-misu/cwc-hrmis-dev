@@ -8144,7 +8144,7 @@ a {
   -webkit-transition: .3s all ease;
   -o-transition: .3s all ease;
   transition: .3s all ease;
-  color: #f8b739; }
+  color: #66b3ff; }
   a:hover, a:focus {
     text-decoration: none !important;
     outline: none !important;
@@ -8243,10 +8243,10 @@ h1, h2, h3, h4, h5,
       color: rgba(255, 255, 255, 0.8);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
       #sidebar ul li a:hover {
-        color: #f8b739; }
+        color: #66b3ff; }
     #sidebar ul li.active > a {
       background: transparent;
-      color: #f8b739; }
+      color: #66b3ff; }
   @media (max-width: 991.98px) {
     #sidebar {
       margin-left: -300px; }
@@ -8278,11 +8278,11 @@ a[data-toggle="collapse"] {
   transition: all 0.3s; }
 
 .btn.btn-primary {
-  background: #f8b739;
-  border-color: #f8b739; }
+  background: #66b3ff;
+  border-color: #66b3ff; }
   .btn.btn-primary:hover, .btn.btn-primary:focus {
-    background: #f8b739 !important;
-    border-color: #f8b739 !important; }
+    background: #66b3ff !important;
+    border-color: #66b3ff !important; }
 
 .footer p {
   color: rgba(255, 255, 255, 0.5); }

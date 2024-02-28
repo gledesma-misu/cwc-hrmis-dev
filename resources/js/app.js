@@ -10,6 +10,7 @@ import LogoutComponent from './components/auth/LogoutComponent.vue';
 import PermissionsCreate from './components/permissions/PermissionsCreate.vue';
 import Users from './components/users/Users.vue';
 import Tasks from './components/tasks/Tasks.vue';
+import Inbox from './components/tasks/Inbox.vue';
 
 import Form from 'vform'
 window.Form = Form;
@@ -38,6 +39,7 @@ app.component('permissions-create', PermissionsCreate);
 app.component('multi-select', Multiselect);
 app.component('users', Users);
 app.component('tasks', Tasks);
+app.component('inbox', Inbox);
 
 window.url = '/cwc-hrmis/'
 

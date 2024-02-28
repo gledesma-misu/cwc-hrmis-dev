@@ -20,54 +20,65 @@
         <nav id="sidebar">
             <div class="p-4 pt-5">
                 <a href="#">
-                    <img class="img logo mb-5" style="" src="{{ asset('public/images/logo.png') }}" alt="logo">
+                    <img class="img logo mb-5" style="" src="{{ asset('public/images/logo.png') }}"
+                        alt="logo">
                 </a>
                 <ul class="list-unstyled components mb-5">
                     @can('administrator')
-                    <li class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}" class="dropdown-toggle" data-bs-toggle="collapse" role="button" aria-controls="homeSubmenu">Management</a>
-                        <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}" id="homeSubmenu">
-                            @can('departments-read')
-                            <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
-                                <a href="{{ route('departmentsIndex') }}">Departments</a>
-                            </li>
-                            @endcan
-                            @can('roles-read')
-                            <li class="{{ Request::is('roles/index') ? 'active' : '' }}">
-                                <a href="{{ route('rolesIndex') }}">Roles</a>
-                            </li>
-                            @endcan
-                            @can('permission-read')
-                            <li class="{{ Request::is('permissions/index') ? 'active' : '' }}">
-                                <a href="{{ route('permissionsIndex') }}">Permissions</a>
-                            </li>
-                            @endcan
-                            @can('users-read')
-                            <li class="{{ Request::is('users/index') ? 'active' : '' }}">
-                                <a href="{{ route('usersIndex') }}">Users</a>
-                            </li>
-                            @endcan
-                        </ul>
-                    </li>
+                        <li
+                            class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
+                            <a href="#homeSubmenu" data-toggle="collapse"
+                                aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}"
+                                class="dropdown-toggle" data-bs-toggle="collapse" role="button"
+                                aria-controls="homeSubmenu">Management</a>
+                            <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}"
+                                id="homeSubmenu">
+                                @can('departments-read')
+                                    <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                        <a href="{{ route('departmentsIndex') }}">ODSU</a>
+                                    </li>
+                                @endcan
+                                @can('roles-read')
+                                    <li class="{{ Request::is('roles/index') ? 'active' : '' }}">
+                                        <a href="{{ route('rolesIndex') }}">Roles</a>
+                                    </li>
+                                @endcan
+                                @can('permission-read')
+                                    <li class="{{ Request::is('permissions/index') ? 'active' : '' }}">
+                                        <a href="{{ route('permissionsIndex') }}">Permissions</a>
+                                    </li>
+                                @endcan
+                                @can('users-read')
+                                    <li class="{{ Request::is('users/index') ? 'active' : '' }}">
+                                        <a href="{{ route('usersIndex') }}">Users</a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </li>
                     @endcan
                     <!-- @can('employee')
-                    <li class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}" class="dropdown-toggle" data-bs-toggle="collapse" role="button" aria-controls="homeSubmenu">Financial</a>
-                        <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}" id="homeSubmenu">
-                            <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
-                                <a href="{{ route('departmentsIndex') }}">Work Financial Plan (WFP)</a>
-                            </li>
-                            <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
-                                <a href="{{ route('departmentsIndex') }}">Project Procurement Management Plan
-                                    (PPMP)</a>
-                            </li>
-                        </ul>
-                    </li>
+    <li class="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'active' : '' }}">
+                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="{{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'true' : 'false' }}" class="dropdown-toggle" data-bs-toggle="collapse" role="button" aria-controls="homeSubmenu">Financial</a>
+                            <ul class="collapse list-unstyled {{ Request::is('departments/index', 'users/index', 'roles/index', 'permissions/index') ? 'show' : '' }}" id="homeSubmenu">
+                                <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                    <a href="{{ route('departmentsIndex') }}">Work Financial Plan (WFP)</a>
+                                </li>
+                                <li class="{{ Request::is('departments/index') ? 'active' : '' }}">
+                                    <a href="{{ route('departmentsIndex') }}">Project Procurement Management Plan
+                                        (PPMP)</a>
+                                </li>
+                            </ul>
+                        </li>
                     @endcan -->
                     @can('tasks-read')
-                    <li class="{{ Request::is('tasks/index') ? 'active' : '' }}">
-                        <a href="{{ route('tasksIndex') }}">Assigned Tasks</a>
-                    </li>
+                        <li class="{{ Request::is('tasks/index') ? 'active' : '' }}">
+                            <a href="{{ route('tasksIndex') }}">Assigned Tasks</a>
+                        </li>
+                    @endcan
+                    @can('inbox-read')
+                        <li class="{{ Request::is('tasks/inbox') ? 'active' : '' }}">
+                            <a href="{{ route('tasksInbox') }}">Inbox Tasks</a>
+                        </li>
                     @endcan
                 </ul>
 
@@ -92,6 +103,11 @@
                         <i class="fa fa-bars"></i>
                         <span class="sr-only">Toggle Menu</span>
                     </button>
+
+                    <span class="ml-3">
+                        Account: {{ Auth::user()->name }}
+                    </span>
+
                     <button class="btn btn-dark d-inline-block d-lg-none ml-auto" id="navbarCollapse">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -102,7 +118,8 @@
                                 <a class="nav-link" href="{{ route('profileIndex') }}">Settings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <a class="nav-link" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <logout-component></logout-component>
@@ -115,19 +132,19 @@
             </nav>
 
             @if ($errors->any())
-            @foreach ($errors->all() as $error)
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ $error }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endforeach
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ $error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endforeach
             @endif
 
             @if (Session::has('success-message'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ Session::get('success-message') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ Session::get('success-message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
 
             @yield('content')
@@ -135,12 +152,12 @@
     </div>
 
     @auth
-    <script>
-        window.token = {!!json_encode(session()-> get('token'))!!}
-        window.auth_user = {!!json_encode(auth()->user())!!};
-        window.auth_roles = {!!json_encode(auth()->user()->roles)!!};
-        window.auth_permissions = {!!json_encode(auth()->user()->permissions)!!};
-    </script>
+        <script>
+            window.token = {!! json_encode(session()->get('token')) !!}
+            window.auth_user = {!! json_encode(auth()->user()) !!};
+            window.auth_roles = {!! json_encode(auth()->user()->roles) !!};
+            window.auth_permissions = {!! json_encode(auth()->user()->permissions) !!};
+        </script>
     @endauth
     <script src="{{ asset('public/js/app.js') }}"></script>
     <!-- <script src="{{ asset('public/sidebar/js/jquery.min.js') }}"></script>

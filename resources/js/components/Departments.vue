@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header bg-dark">
-          <h5 class="float-start text-light">Departments List</h5>
+          <h5 class="float-start text-light">Office/Department/Section/Unit (ODSU) List</h5>
           <button class="btn btn-success float-end" @click="createDepartment"
             v-if="current_permissions.has('departments-create')">
             New Department

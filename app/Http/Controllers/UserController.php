@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Role;
 use Hash;
 class UserController extends Controller
 {
@@ -41,9 +42,27 @@ class UserController extends Controller
         }else{
             $department_id = 0;
         }
+
+        if(count($request->selected_roles) > 0){
+            $role_id = $request->selected_roles[0];
+            $role = Role::findOrFail($role_id);
+
+            if($role->name === 'director'){
+                $user_level = 1;
+            }elseif($role->name ==='manager'){
+                $user_level = 2;
+            }else if($role->name ==='employee'){
+                $user_level = 3;
+            }else{
+                $user_level = 0;
+            }
+        }else{
+            $user_level = 0;
+        }
         
         $user = User::create([
             'department_id'   => $department_id,
+            'user_level'   => $user_level,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
@@ -75,9 +94,27 @@ class UserController extends Controller
         }else{
             $password = Hash::make($request->password);
         }
+
+        if(count($request->selected_roles) > 0){
+            $role_id = $request->selected_roles[0];
+            $role = Role::findOrFail($role_id);
+
+            if($role->name === 'director'){
+                $user_level = 1;
+            }elseif($role->name ==='manager'){
+                $user_level = 2;
+            }else if($role->name ==='employee'){
+                $user_level = 3;
+            }else{
+                $user_level = 0;
+            }
+        }else{
+            $user_level = 0;
+        }
         
         User::where('id', $id)->update([
             'department_id'   => $department_id,
+            'user_level'   => $user_level,
             'name' => $request->name,
             'email' => $request->email,
             'password' => $password
