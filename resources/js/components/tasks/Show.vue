@@ -46,7 +46,7 @@
         <td>
           <p>
             {{
-              taskInfo.performed_by !== 0 ? taskInfo.performed_by?.name : "..."
+              taskInfo.performed_by !== 0 ? taskInfo.performed_by_user?.name : "..."
             }}
           </p>
         </td>

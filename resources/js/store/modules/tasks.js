@@ -7,6 +7,8 @@ export default {
         inbox_tasks: [],
         tasksLinks: [],
         inboxTasksLinks: [],
+        completed_tasks: [],
+        completedTaskLinks: []
     },
     getters: {
         tasks(state) {
@@ -20,6 +22,12 @@ export default {
         },
         inboxTasksLinks(state) {
             return state.inboxTasksLinks;
+        },
+        completed_tasks(state) {
+            return state.completed_tasks;
+        },
+        completedTaskLinks(state) {
+            return state.completedTaskLinks;
         },
        
     },
@@ -64,6 +72,27 @@ export default {
                 }
             }
         },
+        set_completed_tasks: (state, data) => {
+            state.completed_tasks = data;
+
+            state.completedTaskLinks = [];
+
+            for (let i = 0; i < data.links.length; i++) {
+                if (
+                    i === 1 ||
+                    i === Number(data.links.length - 2) ||
+                    data.links[i].active ||
+                    isNaN(data.links[i].label) ||
+                    Number(data.links[i].label) ===
+                        Number(data.current_page + 1) ||
+                    Number(data.links[i].label) ===
+                        Number(data.current_page - 1)
+                ) {
+                    // console.log(data)
+                    state.completedTaskLinks.push(data.links[i]);
+                }
+            }
+        },
     },
     actions: {
         // searchDepartment: (context, searchData) => {
@@ -101,10 +130,17 @@ export default {
                 context.commit("set_inbox_tasks", response.data);
             });
         },
+        getCompletedTasks: (context) => {
+            axios.get(`${window.url}api/getCompletedTasks`).then((response) => {
+                // console.log(response.data);
+                context.commit("set_completed_tasks", response.data);
+            });
+        },
         storePerformTask: (context,data) =>{
             axios.post(window.url + "api/storePerformTask", data.performTaskData, data.config).then((response) => {
                 // this.getDepartments();
                 context.dispatch('getInboxTasks')
+                context.dispatch('getCompletedTasks')
                 $("#exampleModal").modal("hide");
                 $("#task_file").val('');
                 window.Toast.fire({

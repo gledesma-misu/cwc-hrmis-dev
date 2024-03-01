@@ -53,6 +53,7 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
 
 
         Route::get('getInboxTasks', 'getInboxTasks')->middleware('permission:inbox-read');
+        Route::get('getCompletedTasks', 'getCompletedTasks')->middleware('permission:completed-read');
         Route::post('storePerformTask', 'storePerformTask')->middleware('permission:inbox-update');
     });
 });
