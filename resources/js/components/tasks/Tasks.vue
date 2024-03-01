@@ -96,19 +96,20 @@
                       )
                     "
                   >
+                    <button class="btn btn-info mx-1" @click="showTask(task)">
+                      <i class="fa fa-info"></i>
+                    </button>
                     <button
                       class="btn btn-success mx-1"
                       @click="editTask(task)"
                     >
                       <i class="fa fa-edit"></i>
-                      Edit
                     </button>
                     <button
                       class="btn btn-danger mx-1"
                       @click="deleteTask(task)"
                     >
                       <i class="fa fa-trash"></i>
-                      Delete
                     </button>
                   </td>
                 </tr>
@@ -152,8 +153,19 @@
             <div class="modal-dialog modal-xl modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">
+                  <h5
+                    class="modal-title"
+                    id="exampleModalLabel"
+                    v-if="!showMode"
+                  >
                     {{ !editMode ? "Create Task" : "Update Task" }}
+                  </h5>
+                  <h5
+                    class="modal-title"
+                    id="exampleModalLabel"
+                    v-if="showMode"
+                  >
+                    Show Task
                   </h5>
                   <button
                     type="button"
@@ -162,7 +174,7 @@
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" v-if="!showMode">
                   <div class="row">
                     <div class="col-md-3">
                       <div class="form-group">
@@ -267,6 +279,10 @@
                     </div>
                   </div>
                 </div>
+                <!-- Show Mode is true her -->
+                <div class="modal-body" v-if="showMode">
+                  <Show :taskInfo="taskInfo" />
+                </div>
                 <div class="modal-footer">
                   <button
                     type="button"
@@ -279,6 +295,7 @@
                     type="button"
                     @click="!editMode ? storeTask() : updateTask()"
                     class="btn btn-success"
+                    v-if="!showMode"
                   >
                     {{ !editMode ? "Store" : "Save Changes" }}
                   </button>
@@ -293,7 +310,12 @@
 </template>
 
 <script>
+import Show from "./Show.vue";
+
 export default {
+  components: {
+    Show,
+  },
   mounted() {
     this.$store.dispatch("getTasks");
     this.$store.dispatch("getAllUsers");
@@ -319,6 +341,8 @@ export default {
   data() {
     return {
       editMode: false,
+      showMode: false,
+      taskInfo: {},
 
       taskData: new Form({
         id: "",
@@ -343,8 +367,15 @@ export default {
         this.$store.dispatch("getTasksResults", link);
       }
     },
+    showTask(task) {
+      this.showMode = true;
+      this.taskInfo = task;
+
+      $("#exampleModal").modal("show");
+    },
     createTask() {
       this.editMode = false;
+      this.showMode = false;
       this.taskData.reset();
       this.taskData.clear();
       $("#exampleModal").modal("show");
@@ -352,25 +383,26 @@ export default {
     storeTask() {
       this.$store.dispatch("storeTask", this.taskData);
     },
-    editTask(task){
+    editTask(task) {
       this.editMode = true;
+      this.showMode = false;
       this.taskData.reset();
       this.taskData.clear();
 
-      this.taskData.id = task.id
-      this.taskData.title = task.title
-      this.taskData.priority = task.priority
-      this.taskData.start_date = task.start_date
-      this.taskData.end_date = task.end_date
-      this.taskData.description = task.description
+      this.taskData.id = task.id;
+      this.taskData.title = task.title;
+      this.taskData.priority = task.priority;
+      this.taskData.start_date = task.start_date;
+      this.taskData.end_date = task.end_date;
+      this.taskData.description = task.description;
 
-      task.users.forEach(user => {
-        this.taskData.assign_to.push(user.id)
+      task.users.forEach((user) => {
+        this.taskData.assign_to.push(user.id);
       });
 
       $("#exampleModal").modal("show");
     },
-    updateTask(){
+    updateTask() {
       this.$store.dispatch("updateTask", this.taskData);
     },
     deleteTask(task) {
@@ -387,7 +419,7 @@ export default {
           this.$store.dispatch("deleteTask", task);
         }
       });
-    }
+    },
   },
 };
 </script>

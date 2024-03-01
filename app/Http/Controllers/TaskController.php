@@ -15,7 +15,7 @@ class TaskController extends Controller
     }
     public function getTasks(){
         $user_id = auth('api')->user()->id;
-        return Response()->json(Task::where('user_id', $user_id)->with('users')->latest()->paginate(10));
+        return Response()->json(Task::where('user_id', $user_id)->with('users')->with('performed_by_user')->latest()->paginate(10));
     }
     public function storeTask(Request $request){
         $request->validate([
@@ -81,5 +81,43 @@ class TaskController extends Controller
     public function getInboxTasks(){
         $tasks = auth('api')->user()->tasks()->where('status',0)->latest()->paginate(10);
         return response()->json($tasks);
+    }
+
+    public function storePerformTask(Request $request){
+        $task = Task::findOrFail($request->task_id);
+
+
+        if($request->progress == 100){
+            $performed_by = auth('api')->user()->id;
+            $status = 1;
+        }else{
+            $performed_by = 0;
+            $status = 0;
+        }
+
+        if($request->file){
+            if($task->file){
+                unlink(public_path('tasks/' . $task->file));
+            }
+            $upload_path = public_path('tasks');
+            $extension = $request->file->getClientOriginalExtension();
+            $file_name = time() . '.' . $extension;
+            $request->file->move($upload_path,$file_name);
+
+            $file = $file_name;
+
+        }else{
+            $file = $task->file;
+        }
+
+        Task::where('id', $request->task_id)->update([
+            'performed_by'   => $performed_by,
+            'result'    => $request->result,
+            'progress'   =>  $request->progress,
+            'file'   =>  $file,
+            'status'   =>  $status,
+        ]);
+
+        return response()->json('success');
     }
 }

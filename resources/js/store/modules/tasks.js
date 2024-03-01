@@ -12,6 +12,9 @@ export default {
         tasks(state) {
             return state.tasks;
         },
+        tasksLinks(state) {
+            return state.tasksLinks;
+        },
         inbox_tasks(state) {
             return state.inbox_tasks;
         },
@@ -96,6 +99,18 @@ export default {
             axios.get(`${window.url}api/getInboxTasks`).then((response) => {
                 // console.log(response.data);
                 context.commit("set_inbox_tasks", response.data);
+            });
+        },
+        storePerformTask: (context,data) =>{
+            axios.post(window.url + "api/storePerformTask", data.performTaskData, data.config).then((response) => {
+                // this.getDepartments();
+                context.dispatch('getInboxTasks')
+                $("#exampleModal").modal("hide");
+                $("#task_file").val('');
+                window.Toast.fire({
+                    icon: "success",
+                    title: "Task performance stored successfully!",
+                });
             });
         },
         storeTask: (context, taskData) => {
