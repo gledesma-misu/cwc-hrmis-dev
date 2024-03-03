@@ -53,6 +53,7 @@
                   <th>End Date</th>
                   <th>Description</th>
                   <th>Assign To</th>
+                  <th>Status</th>
                   <th
                     v-if="
                       current_permissions.has(
@@ -89,6 +90,11 @@
                     }}
                   </td>
                   <td>{{ task.users.length }} Staff Member/s</td>
+                  <td>
+                    <p v-if="task.progress == 0" class="text-danger ">No Progress</p>
+                    <p v-if="task.progress > 0 && task.priority < 100" class="text-warning ">Under Progress</p>
+                    <p v-if="task.progress == 100" class="text-success ">Completed</p>
+                  </td>
                   <td
                     v-if="
                       current_permissions.has(

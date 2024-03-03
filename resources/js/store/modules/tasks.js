@@ -29,7 +29,7 @@ export default {
         completedTaskLinks(state) {
             return state.completedTaskLinks;
         },
-       
+
     },
     mutations: {
         set_tasks: (state, data) => {
@@ -44,9 +44,9 @@ export default {
                     data.links[i].active ||
                     isNaN(data.links[i].label) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page + 1) ||
+                    Number(data.current_page + 1) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page - 1)
+                    Number(data.current_page - 1)
                 ) {
                     state.tasksLinks.push(data.links[i]);
                 }
@@ -64,9 +64,9 @@ export default {
                     data.links[i].active ||
                     isNaN(data.links[i].label) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page + 1) ||
+                    Number(data.current_page + 1) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page - 1)
+                    Number(data.current_page - 1)
                 ) {
                     state.inboxTasksLinks.push(data.links[i]);
                 }
@@ -84,9 +84,9 @@ export default {
                     data.links[i].active ||
                     isNaN(data.links[i].label) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page + 1) ||
+                    Number(data.current_page + 1) ||
                     Number(data.links[i].label) ===
-                        Number(data.current_page - 1)
+                    Number(data.current_page - 1)
                 ) {
                     // console.log(data)
                     state.completedTaskLinks.push(data.links[i]);
@@ -118,6 +118,13 @@ export default {
                 // console.log(response.data);
             });
         },
+        getCompletedTasksResults: (context, link) => {
+            axios.get(link.url).then((response) => {
+                // console.log(response.data);
+                context.commit("set_completed_tasks", response.data);
+                // console.log(response.data);
+            });
+        },
         getTasks: (context) => {
             axios.get(`${window.url}api/getTasks`).then((response) => {
                 // console.log(response.data);
@@ -136,11 +143,14 @@ export default {
                 context.commit("set_completed_tasks", response.data);
             });
         },
-        storePerformTask: (context,data) =>{
+        storePerformTask: (context, data) => {
             axios.post(window.url + "api/storePerformTask", data.performTaskData, data.config).then((response) => {
                 // this.getDepartments();
-                context.dispatch('getInboxTasks')
-                context.dispatch('getCompletedTasks')
+                if (window.location.href.indexOf("tasks/inbox") > -1) {
+                    context.dispatch('getInboxTasks')
+                } else {
+                    context.dispatch('getCompletedTasks')
+                }
                 $("#exampleModal").modal("hide");
                 $("#task_file").val('');
                 window.Toast.fire({
@@ -164,31 +174,31 @@ export default {
             taskData
                 .post(
                     window.url +
-                        "api/updateTask/" +
-                        taskData.id
+                    "api/updateTask/" +
+                    taskData.id
                 )
                 .then((response) => {
                     context.dispatch('getTasks')
                     $("#exampleModal").modal("hide");
                 });
 
-                window.Toast.fire({
-                    icon: "success",
-                    title: "Task updated successfully!"
-                  });
+            window.Toast.fire({
+                icon: "success",
+                title: "Task updated successfully!"
+            });
 
         },
         deleteTask: (context, taskData) => {
             // if (confirm("Are you sure you wanna delete this department?")) {
-                axios
-                  .post(window.url + "api/deleteTask/" + taskData.id)
-                  .then(() => {
+            axios
+                .post(window.url + "api/deleteTask/" + taskData.id)
+                .then(() => {
                     context.dispatch('getTasks')
                     window.Toast.fire({
                         icon: "success",
                         title: "Task deleted successfully!"
-                      });
-                  });
+                    });
+                });
             //   }
         }
     },

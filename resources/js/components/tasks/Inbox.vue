@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-header bg-dark">
           <h5 class="float-start text-light">
-            {{ page_type == 'inbox' ? 'Inbox Tasks List' :'Completed Tasks List' }}
+            {{ page_type == 'inbox' ? 'Inbox Tasks List' : 'Completed Tasks List' }}
           </h5>
         </div>
         <div class="card-body">
@@ -13,11 +13,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="search_type">Search Type</label>
-                <select
-                  name="search_type"
-                  class="form-control"
-                  v-model="searchData.search_type"
-                >
+                <select name="search_type" class="form-control" v-model="searchData.search_type">
                   <option value="name">Name</option>
                 </select>
               </div>
@@ -25,13 +21,8 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="search_value">Search Value</label>
-                <input
-                  type="text"
-                  name="search_value"
-                  class="form-control"
-                  v-model="searchData.search_value"
-                  @keyup="searchDepartment"
-                />
+                <input type="text" name="search_value" class="form-control" v-model="searchData.search_value"
+                  @keyup="searchDepartment" />
               </div>
             </div>
           </div>
@@ -48,23 +39,23 @@
                   <th>End Date</th>
                   <th>Description</th>
                   <th>Assign To</th>
-                  <th v-if="current_permissions.has('inbox-update') || current_permissions.has('completed-update')">
+                  <th>Status</th>
+                  <th
+                    v-if="page_type == 'inbox' ? current_permissions.has('inbox-update') : current_permissions.has('completed-update')">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody v-if="page_type == 'inbox'">
-                <tr v-for="(task, index) in inbox_tasks.data" :key="index" >
+              <tbody>
+                <tr v-for="(task, index) in (page_type == 'inbox' ? inbox_tasks.data : completed_tasks.data)"
+                  :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ task.title }}</td>
                   <td>
-                    <span
-                      :class="`badge ${
-                        task.priority === 'Urgent'
-                          ? 'badge-danger'
-                          : 'badge-success'
-                      }`"
-                    >
+                    <span :class="`badge ${task.priority === 'Urgent'
+                      ? 'badge-danger'
+                      : 'badge-success'
+                      }`">
                       {{ task.priority }}
                     </span>
                   </td>
@@ -72,129 +63,50 @@
                   <td>{{ task.end_date }}</td>
                   <td>
                     {{
-                      task.description.length <= 10
-                        ? task.description
-                        : task.description.substr(0, 10) + "..."
-                    }}
-                  </td>
+                      task.description.length <= 10 ? task.description : task.description.substr(0, 10) + "..." }} </td>
                   <td>{{ task.users.length }} Staff Member/s</td>
-                  <td v-if="current_permissions.has('inbox-update')">
-                    <button
-                      class="btn btn-success mx-1"
-                      @click="performTask(task)"
-                    >
+                  <td>
+                    <p v-if="task.progress == 0" class="text-danger ">No Progress</p>
+                    <p v-if="task.progress > 0 && task.progress < 100" class="text-warning ">Under Progress</p>
+                    <p v-if="task.progress == 100" class="text-success ">Completed</p>
+                  </td>
+                  <td
+                    v-if="page_type == 'inbox' ? current_permissions.has('inbox-update') : current_permissions.has('completed-update')">
+                    <button class="btn btn-success mx-1" @click="performTask(task)">
                       <i class="fa fa-check"></i>
                     </button>
                   </td>
                 </tr>
               </tbody>
               <!-- completed task -->
-              <tbody v-if="page_type == 'completed'">
-                <tr v-for="(task, index) in completed_tasks.data" :key="index" >
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ task.title }}</td>
-                  <td>
-                    <span
-                      :class="`badge ${
-                        task.priority === 'Urgent'
-                          ? 'badge-danger'
-                          : 'badge-success'
-                      }`"
-                    >
-                      {{ task.priority }}
-                    </span>
-                  </td>
-                  <td>{{ task.start_date }}</td>
-                  <td>{{ task.end_date }}</td>
-                  <td>
-                    {{
-                      task.description.length <= 10
-                        ? task.description
-                        : task.description.substr(0, 10) + "..."
-                    }}
-                  </td>
-                  <td>{{ task.users.length }} Staff Member/s</td>
-                  <td v-if="current_permissions.has('completed-update')">
-                    <button
-                      class="btn btn-success mx-1"
-                      @click="performTask(task)"
-                    >
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+
             </table>
           </div>
 
           <!-- pagination -->
-          <div
-            class="d-flex justify-content-center"
-            v-if="page_type == 'inbox' && inboxTasksLinks.length > 3"
-          >
+          <div class="d-flex justify-content-center"
+            v-if="page_type == 'inbox' ? inboxTasksLinks.length > 3 : completedTaskLinks > 3">
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li
-                  :class="`page-item ${link.active ? 'active' : ''} ${
-                    !link.url ? 'disabled' : ''
-                  }`"
-                  v-for="(link, index) in inboxTasksLinks"
-                  :key="index"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    v-html="link.label"
-                    @click.prevent="getResults(link)"
-                  ></a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div
-            class="d-flex justify-content-center"
-            v-if="page_type == 'completed' && completedTaskLinks.length > 3"
-          >
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li
-                  :class="`page-item ${link.active ? 'active' : ''} ${
-                    !link.url ? 'disabled' : ''
-                  }`"
-                  v-for="(link, index) in completedTaskLinks"
-                  :key="index"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    v-html="link.label"
-                    @click.prevent="getResults(link)"
-                  ></a>
+                <li :class="`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''
+                  }`" v-for="(link, index) in (page_type == 'inbox' ? inboxTasksLinks : completedTaskLinks) "
+                  :key="index">
+                  <a class="page-link" href="#" v-html="link.label" @click.prevent="getResults(link)"></a>
                 </li>
               </ul>
             </nav>
           </div>
 
+
           <!-- Modal -->
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">
                     {{ !editMode ? "Create Task" : "Perform Task" }}
                   </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <div class="row my-2">
@@ -204,7 +116,7 @@
                           <h5>Task Information</h5>
                         </div>
                         <div class="card-body">
-                          <Show :taskInfo="taskInfo"/>
+                          <Show :taskInfo="taskInfo" />
                         </div>
                       </div>
                     </div>
@@ -220,28 +132,31 @@
                             <div class="col-md-12">
                               <div class="form-group">
                                 <label for="result">Result</label>
-                                <textarea class="form-control" rows="3" v-model="performTaskData.result"></textarea>                                
+                                <textarea class="form-control" rows="3" v-model="performTaskData.result"></textarea>
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-7">
                                 <div class="form-group">
                                   <label for="progress">Progress</label><br>
-                                  <input type="range" class="taskRange" min="0" max="100" v-model="performTaskData.progress"/>
+                                  <input type="range" class="taskRange" min="0" max="100"
+                                    v-model="performTaskData.progress" />
                                   <span class="rangeValue">{{ performTaskData.progress }}</span>
                                 </div>
                               </div>
                               <div class="col-md-2">
                                 <label for="status">Status</label>
                                 <p v-if="performTaskData.progress == 0">No Progress</p>
-                                <p v-if="performTaskData.progress > 0 && performTaskData.progress < 100">Under Progress</p>
+                                <p v-if="performTaskData.progress > 0 && performTaskData.progress < 100">Under Progress
+                                </p>
                                 <p v-if="performTaskData.progress == 100">Completed</p>
                               </div>
                               <div class="col-md-3">
                                 <div class="form-group">
                                   <label for="file">File</label>
-                                  <input type="file" class="form-control" id="task_file" @change="getPerformTaskFile($event)">
-                                  <span >{{ taskInfo.file ? 'Already uploaded a file!' : 'No File Uploaded yet!' }}</span>
+                                  <input type="file" class="form-control" id="task_file"
+                                    @change="getPerformTaskFile($event)">
+                                  <span>{{ taskInfo.file ? 'Already uploaded a file!' : 'No File Uploaded yet!' }}</span>
                                 </div><br>
                                 <span v-if="taskInfo.file">
                                   File Name: {{ taskInfo.file }}
@@ -358,18 +273,10 @@
                   </div> -->
                 </div>
                 <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Close
                   </button>
-                  <button
-                    type="button"
-                    @click="storePerformTask"
-                    class="btn btn-success"
-                  >Save Changes
+                  <button type="button" @click="storePerformTask" class="btn btn-success">Save Changes
                   </button>
                 </div>
               </div>
@@ -383,7 +290,7 @@
 <script>
 import Show from './Show.vue'
 export default {
-  components:{
+  components: {
     Show,
   },
   mounted() {
@@ -391,9 +298,9 @@ export default {
     this.$store.dispatch("getCompletedTasks");
     this.$store.dispatch("getAuthRolesAndPermissions");
 
-    if(window.location.href.indexOf("tasks/inbox") > -1){
-     this.page_type = 'inbox'
-    }else{
+    if (window.location.href.indexOf("tasks/inbox") > -1) {
+      this.page_type = 'inbox'
+    } else {
       this.page_type = 'completed'
     }
   },
@@ -451,7 +358,12 @@ export default {
       if (!link.url || link.active) {
         return;
       } else {
-        this.$store.dispatch("getInboxTasksResults", link);
+        if (this.page_type == 'inbox') { 
+          this.$store.dispatch("getInboxTasksResults", link); 
+        } else{
+          this.$store.dispatch("getCompletedTasksResults", link);
+        }
+
       }
     },
     performTask(task) {
@@ -463,12 +375,12 @@ export default {
       this.performTaskData.progress = task.progress;
       $("#exampleModal").modal("show");
     },
-    getPerformTaskFile(event){
+    getPerformTaskFile(event) {
       this.performTaskData.file = event.target.files[0];
 
     },
-    storePerformTask(){
-      const config = {headers: {'content-type': 'multipart/form-data'}};
+    storePerformTask() {
+      const config = { headers: { 'content-type': 'multipart/form-data' } };
       let formData = new FormData();
 
       formData.append('task_id', this.taskInfo.id);
@@ -476,7 +388,7 @@ export default {
       formData.append('progress', this.performTaskData.progress);
       formData.append('file', this.performTaskData.file);
 
-      this.$store.dispatch('storePerformTask', {performTaskData: formData, config: config});
+      this.$store.dispatch('storePerformTask', { performTaskData: formData, config: config });
     }
   },
 };

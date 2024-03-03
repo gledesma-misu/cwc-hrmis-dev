@@ -8,11 +8,8 @@
       <tr>
         <th style="width: 20%">Priority</th>
         <td>
-          <span
-            :class="`badge ${
-              taskInfo.priority === 'Urgent' ? 'bg-danger' : 'bg-success'
-            }`"
-          >
+          <span :class="`badge ${taskInfo.priority === 'Urgent' ? 'bg-danger' : 'bg-success'
+            }`">
             {{ taskInfo.priority }}
           </span>
         </td>
@@ -32,13 +29,27 @@
       <tr>
         <th style="width: 20%">Assigned To</th>
         <td>
-          <span
-            :class="`badge bg-dark mx-1`"
-            v-for="(user, index) in taskInfo.users"
-            :key="index"
-          >
+          <span :class="`badge bg-dark mx-1`" v-for="(user, index) in taskInfo.users" :key="index">
             {{ user.name }}
           </span>
+        </td>
+      </tr>
+      <tr>
+        <th style="width: 20%">Assigned To</th>
+        <td>
+          <span :class="`badge bg-dark mx-1`" v-for="(user, index) in taskInfo.users" :key="index">
+            {{ user.name }}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <th style="width: 20%">Status</th>
+        <td>
+        <td>
+          <p v-if="taskInfo .progress == 0" class="text-danger ">No Progress</p>
+          <p v-if="taskInfo .progress > 0 && taskInfo .progress < 100" class="text-warning ">Under Progress</p>
+          <p v-if="taskInfo .progress == 100" class="text-success ">Completed</p>
+        </td>
         </td>
       </tr>
       <tr>
@@ -68,12 +79,8 @@
       <tr>
         <th style="width: 20%">Task File</th>
         <td>
-          <a
-            :href="`${url}public/tasks/${taskInfo.file}`"
-            class="btn btn-success " v-if="taskInfo.file"
-            target="_blank"
-          >
-          <i class="fa fa-download" ></i>
+          <a :href="`${url}public/tasks/${taskInfo.file}`" class="btn btn-success " v-if="taskInfo.file" target="_blank">
+            <i class="fa fa-download"></i>
           </a>
           <p v-else>No file uploaded yet</p>
         </td>
