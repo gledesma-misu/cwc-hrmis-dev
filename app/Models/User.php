@@ -27,6 +27,7 @@ class User extends Authenticatable implements LaratrustUser
         'name',
         'email',
         'password',
+        'text_password',
     ];
 
     /**
@@ -37,6 +38,7 @@ class User extends Authenticatable implements LaratrustUser
     protected $hidden = [
         'password',
         'remember_token',
+        'text_password',
     ];
 
     /**
@@ -55,6 +57,6 @@ class User extends Authenticatable implements LaratrustUser
     }
 
     public function tasks(){
-        return $this->belongsToMany('App\Models\Task')->with('users')->with('performed_by_user');
+        return $this->belongsToMany('App\Models\Task')->with('users')->with('performed_by_user')->with('sub_tasks');
     }
 }

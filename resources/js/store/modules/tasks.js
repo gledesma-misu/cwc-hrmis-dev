@@ -162,7 +162,12 @@ export default {
         storeTask: (context, taskData) => {
             taskData.post(window.url + "api/storeTask").then((response) => {
                 // this.getDepartments();
-                context.dispatch('getTasks')
+                if (window.location.href.indexOf("tasks/index") > -1) {
+                    context.dispatch('getTasks')
+                } else {
+                    context.dispatch('getInboxTasks')
+                }
+
                 $("#exampleModal").modal("hide");
                 window.Toast.fire({
                     icon: "success",
@@ -178,7 +183,11 @@ export default {
                     taskData.id
                 )
                 .then((response) => {
-                    context.dispatch('getTasks')
+                    if (window.location.href.indexOf("tasks/index") > -1) {
+                        context.dispatch('getTasks')
+                    } else {
+                        context.dispatch('getInboxTasks')
+                    }
                     $("#exampleModal").modal("hide");
                 });
 
@@ -193,7 +202,12 @@ export default {
             axios
                 .post(window.url + "api/deleteTask/" + taskData.id)
                 .then(() => {
-                    context.dispatch('getTasks')
+                    if (window.location.href.indexOf("tasks/index") > -1) {
+                        context.dispatch('getTasks')
+                    } else {
+                        context.dispatch('getInboxTasks')
+                        $("#exampleModal").modal("hide");
+                    }
                     window.Toast.fire({
                         icon: "success",
                         title: "Task deleted successfully!"

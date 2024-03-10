@@ -32,4 +32,8 @@ class Task extends Model
         return $this->belongsTo('App\Models\User', 'performed_by');
     }
 
+    public function sub_tasks(){
+        return $this->hasMany('App\Models\Task','parent_id')->with('users')->with('performed_by_user');
+    }
+
 }
