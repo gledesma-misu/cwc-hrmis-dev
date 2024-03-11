@@ -5,17 +5,36 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class TaskController extends Controller
 {
+    public function searchTask(){
+        $user_id = auth('api')->user()->id;
+        if ($search = \Request::get('users')) {
+            $tasks = Task::where('user_id', $user_id)->where('parent_id', '0')->with('users')->with('performed_by_user')->whereHas('users' , function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%$search%");
+            })->latest()->paginate(10);
+        } else if($search = \Request::get('title')){
+            $tasks = Task::where('user_id', $user_id)->where('parent_id', '0')->with('users')->with('performed_by_user')->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%$search%")
+                ->orWhere('priority', 'LIKE', "%$search%")
+                ->orWhere('start_date', 'LIKE', "%$search%")
+                ->orWhere('end_date', 'LIKE', "%$search%");
+            })->latest()->paginate(10);
+        }else{
+            $tasks = Task::where('user_id', $user_id)->where('parent_id', '0')->with('users')->with('performed_by_user')->latest()->paginate(10);
+        }
+        return response()->json($tasks);
+    }
     public function tasksIndex(){
 
         return view('tasks.index');
     }
     public function getTasks(){
         $user_id = auth('api')->user()->id;
-        return Response()->json(Task::where('user_id', $user_id)->with('users')->with('performed_by_user')->latest()->paginate(10));
+        return Response()->json(Task::where('user_id', $user_id)->where('parent_id', '0')->with('users')->with('performed_by_user')->latest()->paginate(10));
     }
     public function storeTask(Request $request){
         $request->validate([
@@ -80,8 +99,21 @@ class TaskController extends Controller
         return response()->json('success');
     }
 
-    public function tasksInbox(){
+    public function searchInbox(){
+        if($search = \Request::get('title')){
+            $tasks = auth('api')->user()->tasks()->where('status',0)->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%$search%")
+                ->orWhere('priority', 'LIKE', "%$search%")
+                ->orWhere('start_date', 'LIKE', "%$search%")
+                ->orWhere('end_date', 'LIKE', "%$search%");
+            })->latest()->paginate(10);
+        }else{
+            $tasks = auth('api')->user()->tasks()->where('status',0)->latest()->paginate(10);
+        }
+        return response()->json($tasks);
+    }
 
+    public function tasksInbox(){
         return view('tasks.inbox');
     }
 
@@ -126,6 +158,20 @@ class TaskController extends Controller
         ]);
 
         return response()->json('success');
+    }
+
+    public function searchCompleted(){
+        if($search = \Request::get('title')){
+            $tasks = auth('api')->user()->tasks()->where('status',1)->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%$search%")
+                ->orWhere('priority', 'LIKE', "%$search%")
+                ->orWhere('start_date', 'LIKE', "%$search%")
+                ->orWhere('end_date', 'LIKE', "%$search%");
+            })->latest()->paginate(10);
+        }else{
+            $tasks = auth('api')->user()->tasks()->where('status',1)->latest()->paginate(10);
+        }
+        return response()->json($tasks);
     }
     public function tasksCompleted(){
         return view('tasks.completed');

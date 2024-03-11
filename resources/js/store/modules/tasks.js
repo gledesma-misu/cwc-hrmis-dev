@@ -95,15 +95,15 @@ export default {
         },
     },
     actions: {
-        // searchDepartment: (context, searchData) => {
-        //     setTimeout(function(){
-        //         axios.get(`${window.url}api/searchDepartment?${searchData.search_type}=${searchData.search_value}`).then((response) => {
-        //             context.commit("set_departments", response.data);
-        //         }).catch(err => {
-        //             console.log(err);
-        //         });
-        //     })
-        // },
+        searchTask: (context, searchData) => {
+            setTimeout(function(){
+                axios.get(`${window.url}api/searchTask?${searchData.search_type}=${searchData.search_value}`).then((response) => {
+                    context.commit("set_tasks", response.data);
+                }).catch(err => {
+                    console.log(err);
+                });
+            })
+        },
         getTasksResults: (context, link) => {
             axios.get(link.url).then((response) => {
                 // console.log(response.data);
@@ -131,11 +131,29 @@ export default {
                 context.commit("set_tasks", response.data);
             });
         },
+        searchInbox: (context, searchData) => {
+            setTimeout(function(){
+                axios.get(`${window.url}api/searchInbox?${searchData.search_type}=${searchData.search_value}`).then((response) => {
+                    context.commit("set_inbox_tasks", response.data);
+                }).catch(err => {
+                    console.log(err);
+                });
+            })
+        },
         getInboxTasks: (context) => {
             axios.get(`${window.url}api/getInboxTasks`).then((response) => {
                 // console.log(response.data);
                 context.commit("set_inbox_tasks", response.data);
             });
+        },
+        searchCompleted: (context, searchData) => {
+            setTimeout(function(){
+                axios.get(`${window.url}api/searchCompleted?${searchData.search_type}=${searchData.search_value}`).then((response) => {
+                    context.commit("set_completed_tasks", response.data);
+                }).catch(err => {
+                    console.log(err);
+                });
+            })
         },
         getCompletedTasks: (context) => {
             axios.get(`${window.url}api/getCompletedTasks`).then((response) => {

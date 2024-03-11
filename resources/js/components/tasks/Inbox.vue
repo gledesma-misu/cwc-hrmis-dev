@@ -14,7 +14,7 @@
               <div class="form-group">
                 <label for="search_type">Search Type</label>
                 <select name="search_type" class="form-control" v-model="searchData.search_type">
-                  <option value="name">Name</option>
+                  <option value="title">Title | Priority | Dates</option>
                 </select>
               </div>
             </div>
@@ -22,7 +22,7 @@
               <div class="form-group">
                 <label for="search_value">Search Value</label>
                 <input type="text" name="search_value" class="form-control" v-model="searchData.search_value"
-                  @keyup="searchDepartment" />
+                  @keyup="page_type == 'inbox' ? searchInbox() : searchCompleted()" />
               </div>
             </div>
           </div>
@@ -376,13 +376,19 @@ export default {
         assign_to: [],
       }),
       searchData: {
-        search_type: "name",
+        search_type: "title",
         search_value: "",
       },
       allSubTasks: {},
     };
   },
   methods: {
+    searchInbox() {
+      this.$store.dispatch('searchInbox', this.searchData)
+    },
+    searchCompleted() {
+      this.$store.dispatch('searchCompleted', this.searchData)
+    },
     getResults(link) {
       if (!link.url || link.active) {
         return;

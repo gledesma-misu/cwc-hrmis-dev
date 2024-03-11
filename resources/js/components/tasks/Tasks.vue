@@ -23,7 +23,9 @@
                   class="form-control"
                   v-model="searchData.search_type"
                 >
-                  <option value="name">Name</option>
+                  <option value="title">Title | Priority | Dates</option>
+                  <option value="users">Assigned To</option>
+                  
                 </select>
               </div>
             </div>
@@ -35,7 +37,7 @@
                   name="search_value"
                   class="form-control"
                   v-model="searchData.search_value"
-                  @keyup="searchDepartment"
+                  @keyup="searchTask"
                 />
               </div>
             </div>
@@ -360,12 +362,15 @@ export default {
         assign_to: [],
       }),
       searchData: {
-        search_type: "name",
+        search_type: "title",
         search_value: "",
       },
     };
   },
   methods: {
+    searchTask() {
+      this.$store.dispatch('searchTask', this.searchData)
+    },
     getResults(link) {
       if (!link.url || link.active) {
         return;
