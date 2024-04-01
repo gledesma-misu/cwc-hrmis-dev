@@ -5567,6 +5567,16 @@ timsort@^0.3.0:
   resolved "https://registry.npmjs.org/timsort/-/timsort-0.3.0.tgz"
   integrity sha512-qsdtZH+vMoCARQtyod4imc2nIJwg9Cc7lPRrw9CzF8ZKR0khdr8+2nX80PBhET3tcyTtJDxAffGh2rXH4tyU8A==
 
+tiny-emitter@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
+  integrity sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==
+
+tinyemitter@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/tinyemitter/-/tinyemitter-1.0.1.tgz#1c9c8c065c684c69950b36ff0e451e12da2164d4"
+  integrity sha512-E32KX7eRwjInGPSoOeaKLsrBKVMxkMfqQTEVm3huD+tNhO4OmTsFOQH0kpVyrOuEh+OBTN4i/AG8Sp7MlxOk9Q==
+
 to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/to-fast-properties/-/to-fast-properties-2.0.0.tgz"

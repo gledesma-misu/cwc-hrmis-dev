@@ -3,8 +3,6 @@ require('./bootstrap');
 
 import {createApp} from 'vue';
 import {store} from './store/store';
-import Multiselect from '@vueform/multiselect';
-import '@vueform/multiselect/themes/default.css';
 import Departments from './components/Departments.vue';
 import LogoutComponent from './components/auth/LogoutComponent.vue';
 import PermissionsCreate from './components/permissions/PermissionsCreate.vue';
@@ -14,6 +12,13 @@ import Inbox from './components/tasks/Inbox.vue';
 
 import Form from 'vform'
 window.Form = Form;
+
+var Emitter = require('tiny-emitter')
+window.emitter = new Emitter();
+
+import Multiselect from '@vueform/multiselect';
+import '@vueform/multiselect/themes/default.css';
+
 import Swal from 'sweetalert2';
 window.Swal = Swal;
 

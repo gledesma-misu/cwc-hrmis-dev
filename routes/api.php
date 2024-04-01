@@ -6,6 +6,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,11 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
         Route::get('searchCompleted', 'searchCompleted')->middleware('permission:completed-read');
         Route::get('getCompletedTasks', 'getCompletedTasks')->middleware('permission:completed-read');
         Route::post('storePerformTask', 'storePerformTask')->middleware('permission:inbox-update');
+    });
+    Route::controller(CommentController::class)->group(function () {
+        Route::get('getComments/{id}', 'getComments')->middleware('permission:comments-read');
+        Route::post('storeComment', 'storeComment')->middleware('permission:comments-create');
+
     });
 });
     

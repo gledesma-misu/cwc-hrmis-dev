@@ -59,4 +59,8 @@ class User extends Authenticatable implements LaratrustUser
     public function tasks(){
         return $this->belongsToMany('App\Models\Task')->with('users')->with('performed_by_user')->with('sub_tasks');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Models\Comment');
+    }
 }
