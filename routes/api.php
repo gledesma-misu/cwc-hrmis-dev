@@ -63,6 +63,8 @@ Route::middleware(['forcetojson', 'auth:api'])->group(function() {
     Route::controller(CommentController::class)->group(function () {
         Route::get('getComments/{id}', 'getComments')->middleware('permission:comments-read');
         Route::post('storeComment', 'storeComment')->middleware('permission:comments-create');
+        Route::post('updateComment/{id}', 'updateComment')->middleware('permission:comments-update');
+        Route::post('deleteComment/{id}', 'deleteComment')->middleware('permission:comments-delete');
 
     });
 });

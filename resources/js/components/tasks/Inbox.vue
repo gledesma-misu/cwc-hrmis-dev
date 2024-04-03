@@ -4,7 +4,9 @@
       <div class="card">
         <div class="card-header bg-dark">
           <h5 class="float-start text-light">
-            {{ page_type == 'inbox' ? 'Inbox Tasks List' : 'Completed Tasks List' }}
+            {{
+              page_type == "inbox" ? "Inbox Tasks List" : "Completed Tasks List"
+            }}
           </h5>
         </div>
         <div class="card-body">
@@ -13,7 +15,11 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="search_type">Search Type</label>
-                <select name="search_type" class="form-control" v-model="searchData.search_type">
+                <select
+                  name="search_type"
+                  class="form-control"
+                  v-model="searchData.search_type"
+                >
                   <option value="title">Title | Priority | Dates</option>
                 </select>
               </div>
@@ -21,8 +27,15 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="search_value">Search Value</label>
-                <input type="text" name="search_value" class="form-control" v-model="searchData.search_value"
-                  @keyup="page_type == 'inbox' ? searchInbox() : searchCompleted()" />
+                <input
+                  type="text"
+                  name="search_value"
+                  class="form-control"
+                  v-model="searchData.search_value"
+                  @keyup="
+                    page_type == 'inbox' ? searchInbox() : searchCompleted()
+                  "
+                />
               </div>
             </div>
           </div>
@@ -40,23 +53,38 @@
                   <th>Description</th>
                   <th>Assign To</th>
                   <th>Status</th>
+                  <th v-if="current_permissions.has('comments-read')">
+                    Comments
+                  </th>
                   <th v-if="current_permissions.has('subs-read')">Sub Tasks</th>
                   <th
-                    v-if="page_type == 'inbox' ? current_permissions.has('inbox-update') : current_permissions.has('completed-update')">
+                    v-if="
+                      page_type == 'inbox'
+                        ? current_permissions.has('inbox-update')
+                        : current_permissions.has('completed-update')
+                    "
+                  >
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(task, index) in (page_type == 'inbox' ? inbox_tasks.data : completed_tasks.data)"
-                  :key="index">
+                <tr
+                  v-for="(task, index) in page_type == 'inbox'
+                    ? inbox_tasks.data
+                    : completed_tasks.data"
+                  :key="index"
+                >
                   <td>{{ index + 1 }}</td>
                   <td>{{ task.title }}</td>
                   <td>
-                    <span :class="`badge ${task.priority === 'Urgent'
-              ? 'badge-danger'
-              : 'badge-success'
-              }`">
+                    <span
+                      :class="`badge ${
+                        task.priority === 'Urgent'
+                          ? 'badge-danger'
+                          : 'badge-success'
+                      }`"
+                    >
                       {{ task.priority }}
                     </span>
                   </td>
@@ -64,58 +92,125 @@
                   <td>{{ task.end_date }}</td>
                   <td>
                     {{
-              task.description.length <= 10 ? task.description : task.description.substr(0, 10) + "..." }} </td>
+                      task.description.length <= 10
+                        ? task.description
+                        : task.description.substr(0, 10) + "..."
+                    }}
+                  </td>
                   <td>{{ task.users.length }} Staff Member/s</td>
                   <td>
-                    <p v-if="task.progress == 0" class="text-danger ">No Progress</p>
-                    <p v-if="task.progress > 0 && task.progress < 100" class="text-warning ">Under Progress</p>
-                    <p v-if="task.progress == 100" class="text-success ">Completed</p>
+                    <p v-if="task.progress == 0" class="text-danger">
+                      No Progress
+                    </p>
+                    <p
+                      v-if="task.progress > 0 && task.progress < 100"
+                      class="text-warning"
+                    >
+                      Under Progress
+                    </p>
+                    <p v-if="task.progress == 100" class="text-success">
+                      Completed
+                    </p>
+                  </td>
+                  <td v-if="current_permissions.has('comments-read')">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      @click="showComments(task)"
+                    >
+                      <i class="fa fa-comment"></i>
+                    </button>
                   </td>
                   <td v-if="current_permissions.has('subs-read')">
-                    <button class="btn btn-secondary mx-1" @click="subTasks(task)">
+                    <button
+                      class="btn btn-secondary mx-1"
+                      @click="subTasks(task)"
+                    >
                       <i class="fa fa-tasks"></i>
                     </button>
                   </td>
                   <td
-                    v-if="page_type == 'inbox' ? current_permissions.has('inbox-update') : current_permissions.has('completed-update')">
-                    <button class="btn btn-success mx-1" @click="performTask(task)">
+                    v-if="
+                      page_type == 'inbox'
+                        ? current_permissions.has('inbox-update')
+                        : current_permissions.has('completed-update')
+                    "
+                  >
+                    <button
+                      class="btn btn-success mx-1"
+                      @click="performTask(task)"
+                    >
                       <i class="fa fa-check"></i>
                     </button>
                   </td>
                 </tr>
               </tbody>
               <!-- completed task -->
-
             </table>
           </div>
 
           <!-- pagination -->
-          <div class="d-flex justify-content-center"
-            v-if="page_type == 'inbox' ? inboxTasksLinks.length > 3 : completedTaskLinks > 3">
+          <div
+            class="d-flex justify-content-center"
+            v-if="
+              page_type == 'inbox'
+                ? inboxTasksLinks.length > 3
+                : completedTaskLinks > 3
+            "
+          >
             <nav aria-label="Page navigation example">
               <ul class="pagination">
-                <li :class="`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''
-              }`" v-for="(link, index) in (page_type == 'inbox' ? inboxTasksLinks : completedTaskLinks) " :key="index">
-                  <a class="page-link" href="#" v-html="link.label" @click.prevent="getResults(link)"></a>
+                <li
+                  :class="`page-item ${link.active ? 'active' : ''} ${
+                    !link.url ? 'disabled' : ''
+                  }`"
+                  v-for="(link, index) in page_type == 'inbox'
+                    ? inboxTasksLinks
+                    : completedTaskLinks"
+                  :key="index"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    v-html="link.label"
+                    @click.prevent="getResults(link)"
+                  ></a>
                 </li>
               </ul>
             </nav>
           </div>
 
-
           <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
             <div class="modal-dialog modal-xl modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel" v-if="!subTaskMode">
+                  <h5
+                    class="modal-title"
+                    id="exampleModalLabel"
+                    v-if="!subTaskMode"
+                  >
                     {{ !editMode ? "Create Task" : "Perform Task" }}
                   </h5>
-                  <h5 class="modal-title" id="exampleModalLabel" v-if="subTaskMode">
+                  <h5
+                    class="modal-title"
+                    id="exampleModalLabel"
+                    v-if="subTaskMode"
+                  >
                     Sub Tasks
                   </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
                 </div>
                 <div class="modal-body">
                   <div class="row my-2" v-if="!subTaskMode">
@@ -141,33 +236,62 @@
                             <div class="col-md-12">
                               <div class="form-group">
                                 <label for="result">Result</label>
-                                <textarea class="form-control" rows="3" v-model="performTaskData.result"></textarea>
+                                <textarea
+                                  class="form-control"
+                                  rows="3"
+                                  v-model="performTaskData.result"
+                                ></textarea>
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-7">
                                 <div class="form-group">
-                                  <label for="progress">Progress</label><br>
-                                  <input type="range" class="taskRange" min="0" max="100"
-                                    v-model="performTaskData.progress" />
-                                  <span class="rangeValue">{{ performTaskData.progress }}</span>
+                                  <label for="progress">Progress</label><br />
+                                  <input
+                                    type="range"
+                                    class="taskRange"
+                                    min="0"
+                                    max="100"
+                                    v-model="performTaskData.progress"
+                                  />
+                                  <span class="rangeValue">{{
+                                    performTaskData.progress
+                                  }}</span>
                                 </div>
                               </div>
                               <div class="col-md-2">
                                 <label for="status">Status</label>
-                                <p v-if="performTaskData.progress == 0">No Progress</p>
-                                <p v-if="performTaskData.progress > 0 && performTaskData.progress < 100">Under Progress
+                                <p v-if="performTaskData.progress == 0">
+                                  No Progress
                                 </p>
-                                <p v-if="performTaskData.progress == 100">Completed</p>
+                                <p
+                                  v-if="
+                                    performTaskData.progress > 0 &&
+                                    performTaskData.progress < 100
+                                  "
+                                >
+                                  Under Progress
+                                </p>
+                                <p v-if="performTaskData.progress == 100">
+                                  Completed
+                                </p>
                               </div>
                               <div class="col-md-3">
                                 <div class="form-group">
                                   <label for="file">File</label>
-                                  <input type="file" class="form-control" id="task_file"
-                                    @change="getPerformTaskFile($event)">
-                                  <span>{{ taskInfo.file ? 'Already uploaded a file!' : 'No File Uploaded yet!'
-                                    }}</span>
-                                </div><br>
+                                  <input
+                                    type="file"
+                                    class="form-control"
+                                    id="task_file"
+                                    @change="getPerformTaskFile($event)"
+                                  />
+                                  <span>{{
+                                    taskInfo.file
+                                      ? "Already uploaded a file!"
+                                      : "No File Uploaded yet!"
+                                  }}</span>
+                                </div>
+                                <br />
                                 <span v-if="taskInfo.file">
                                   File Name: {{ taskInfo.file }}
                                 </span>
@@ -184,36 +308,67 @@
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" name="title" v-model="taskData.title" />
-                        <div class="text-danger" v-if="taskData.errors.has('title')"
-                          v-html="taskData.errors.get('title')" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="title"
+                          v-model="taskData.title"
+                        />
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('title')"
+                          v-html="taskData.errors.get('title')"
+                        />
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="priority">Priority</label>
-                        <select name="" class="form-control" v-model="taskData.priority">
+                        <select
+                          name=""
+                          class="form-control"
+                          v-model="taskData.priority"
+                        >
                           <option value="Urgent">Urgent</option>
                           <option value="Not Urgent">Not Urgent</option>
                         </select>
-                        <div class="text-danger" v-if="taskData.errors.has('priority')"
-                          v-html="taskData.errors.get('priority')" />
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('priority')"
+                          v-html="taskData.errors.get('priority')"
+                        />
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="start_date">Start Date</label>
-                        <input type="date" class="form-control" name="start_date" v-model="taskData.start_date" />
-                        <div class="text-danger" v-if="taskData.errors.has('start_date')"
-                          v-html="taskData.errors.get('start_date')" />
+                        <input
+                          type="date"
+                          class="form-control"
+                          name="start_date"
+                          v-model="taskData.start_date"
+                        />
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('start_date')"
+                          v-html="taskData.errors.get('start_date')"
+                        />
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="end_date">End Date</label>
-                        <input type="date" class="form-control" name="end_date" v-model="taskData.end_date" />
-                        <div class="text-danger" v-if="taskData.errors.has('end_date')"
-                          v-html="taskData.errors.get('end_date')" />
+                        <input
+                          type="date"
+                          class="form-control"
+                          name="end_date"
+                          v-model="taskData.end_date"
+                        />
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('end_date')"
+                          v-html="taskData.errors.get('end_date')"
+                        />
                       </div>
                     </div>
                   </div>
@@ -221,9 +376,16 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="Description">Description</label>
-                        <textarea rows="3" class="form-control" v-model="taskData.description"></textarea>
-                        <div class="text-danger" v-if="taskData.errors.has('description')"
-                          v-html="taskData.errors.get('description')" />
+                        <textarea
+                          rows="3"
+                          class="form-control"
+                          v-model="taskData.description"
+                        ></textarea>
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('description')"
+                          v-html="taskData.errors.get('description')"
+                        />
                       </div>
                     </div>
                   </div>
@@ -231,46 +393,90 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="assign_to"> Assign To</label>
-                        <multi-select :options="filtered_users" v-model="taskData.assign_to" :searchable="true"
-                          mode="tags"></multi-select>
-                        <div class="text-danger" v-if="taskData.errors.has('assign_to')"
-                          v-html="taskData.errors.get('assign_to')" />
+                        <multi-select
+                          :options="filtered_users"
+                          v-model="taskData.assign_to"
+                          :searchable="true"
+                          mode="tags"
+                        ></multi-select>
+                        <div
+                          class="text-danger"
+                          v-if="taskData.errors.has('assign_to')"
+                          v-html="taskData.errors.get('assign_to')"
+                        />
                       </div>
                     </div>
                   </div>
                   <div class="row" v-if="subTaskMode">
                     <div class="col-md-12 text-right">
-                      <button class="btn btn-danger mx-2" v-if="subEditMode" @click="cancelSubTaskEdit()">Cancel</button>
-                      <button class="btn btn-success" @click="!subEditMode ? storeSubTask() : updateSubTask()">{{ !subEditMode ? 'Create Sub Task' : 'Save Changes'}}</button>
+                      <button
+                        class="btn btn-danger mx-2"
+                        v-if="subEditMode"
+                        @click="cancelSubTaskEdit()"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        class="btn btn-success"
+                        @click="!subEditMode ? storeSubTask() : updateSubTask()"
+                      >
+                        {{ !subEditMode ? "Create Sub Task" : "Save Changes" }}
+                      </button>
                     </div>
                   </div>
 
-                  <div class="row mt-3"  v-if="subTaskMode">
+                  <div class="row mt-3" v-if="subTaskMode">
                     <div class="col-md-12">
                       <div class="card-mt-3">
                         <div class="card-header">
                           <h5>Sub Tasks List</h5>
                         </div>
                         <div class="card-body">
-                          <div class="accordion accordion-flush" id="accordionFlushExample">
-                            <div class="accordion-item" v-for="(sub_task, index) in allSubTasks" :key="index">
-                              <h2 class="accordion-header" :id="`flush-heading${index}`">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                  :data-bs-target="`#flush-collapse${index}`" aria-expanded="false"
-                                  :aria-controls="`flush-collapse${index}`">
-                                  {{ index + 1 + ' - ' + sub_task.title }}
+                          <div
+                            class="accordion accordion-flush"
+                            id="accordionFlushExample"
+                          >
+                            <div
+                              class="accordion-item"
+                              v-for="(sub_task, index) in allSubTasks"
+                              :key="index"
+                            >
+                              <h2
+                                class="accordion-header"
+                                :id="`flush-heading${index}`"
+                              >
+                                <button
+                                  class="accordion-button collapsed"
+                                  type="button"
+                                  data-bs-toggle="collapse"
+                                  :data-bs-target="`#flush-collapse${index}`"
+                                  aria-expanded="false"
+                                  :aria-controls="`flush-collapse${index}`"
+                                >
+                                  {{ index + 1 + " - " + sub_task.title }}
                                 </button>
                               </h2>
-                              <div :id="`flush-collapse${index}`" class="accordion-collapse collapse"
-                                :aria-labelledby="`flush-heading${index}`" data-bs-parent="#accordionFlushExample">
+                              <div
+                                :id="`flush-collapse${index}`"
+                                class="accordion-collapse collapse"
+                                :aria-labelledby="`flush-heading${index}`"
+                                data-bs-parent="#accordionFlushExample"
+                              >
                                 <div class="accordion-body">
-
                                   <div class="row mb-3">
                                     <div class="col-md-12">
-                                      <a href="#" class="btn btn-success btn-sm mr-2 mb-2" @click.prevent="editSubTask(sub_task)">
+                                      <a
+                                        href="#"
+                                        class="btn btn-success btn-sm mr-2 mb-2"
+                                        @click.prevent="editSubTask(sub_task)"
+                                      >
                                         <i class="fa fa-edit"></i>
                                       </a>
-                                      <a href="#" class="btn btn-danger btn-sm mr-2 mb-2" @click.prevent="deleteSubTask(sub_task)">
+                                      <a
+                                        href="#"
+                                        class="btn btn-danger btn-sm mr-2 mb-2"
+                                        @click.prevent="deleteSubTask(sub_task)"
+                                      >
                                         <i class="fa fa-trash"></i>
                                       </a>
                                     </div>
@@ -287,19 +493,27 @@
                   </div>
                 </div>
 
-
-
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
                     Close
                   </button>
-                  <button type="button" @click="storePerformTask" class="btn btn-success" v-if="!subTaskMode">Save
-                    Changes
+                  <button
+                    type="button"
+                    @click="storePerformTask"
+                    class="btn btn-success"
+                    v-if="!subTaskMode"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </div>
             </div>
           </div>
+          <Comments :taskInfo="taskInfo" :comments="comments" />
         </div>
       </div>
     </div>
@@ -307,24 +521,26 @@
 </template>
 
 <script>
-import Show from './Show.vue'
+import Show from "./Show.vue";
+import Comments from "./Comments.vue";
 export default {
   components: {
     Show,
+    Comments,
   },
   mounted() {
     this.$store.dispatch("getInboxTasks");
     this.$store.dispatch("getCompletedTasks");
     this.$store.dispatch("getAuthRolesAndPermissions");
 
-    if (this.current_permissions.has('subs-create')) {
+    if (this.current_permissions.has("subs-create")) {
       this.$store.dispatch("getAllUsers");
     }
 
     if (window.location.href.indexOf("tasks/inbox") > -1) {
-      this.page_type = 'inbox'
+      this.page_type = "inbox";
     } else {
-      this.page_type = 'completed'
+      this.page_type = "completed";
     }
   },
   computed: {
@@ -333,6 +549,9 @@ export default {
     },
     completed_tasks() {
       return this.$store.getters.completed_tasks;
+    },
+    comments() {
+      return this.$store.getters.comments;
     },
     filtered_users() {
       return this.$store.getters.filtered_users;
@@ -352,18 +571,18 @@ export default {
   },
   data() {
     return {
-      page_type: '',
+      page_type: "",
       editMode: false,
       performMode: false,
       subTaskMode: false,
       subEditMode: false,
       taskInfo: {},
       performTaskData: {
-        id: '',
+        id: "",
         task_info: {},
-        result: '',
+        result: "",
         progress: 0,
-        file: ''
+        file: "",
       },
       taskData: new Form({
         id: "",
@@ -384,22 +603,27 @@ export default {
   },
   methods: {
     searchInbox() {
-      this.$store.dispatch('searchInbox', this.searchData)
+      this.$store.dispatch("searchInbox", this.searchData);
     },
     searchCompleted() {
-      this.$store.dispatch('searchCompleted', this.searchData)
+      this.$store.dispatch("searchCompleted", this.searchData);
     },
     getResults(link) {
       if (!link.url || link.active) {
         return;
       } else {
-        if (this.page_type == 'inbox') {
+        if (this.page_type == "inbox") {
           this.$store.dispatch("getInboxTasksResults", link);
         } else {
           this.$store.dispatch("getCompletedTasksResults", link);
         }
-
       }
+    },
+    showComments(task) {
+      this.taskInfo = task;
+      window.emitter.emit("resetCommentData");
+      this.$store.dispatch("getComments", { taskData: task });
+      $("#commentsModal").modal("show");
     },
     subTasks(task) {
       this.editMode = false;
@@ -411,17 +635,16 @@ export default {
       this.taskData.clear();
 
       this.taskData.parent_id = task.id;
-      this.allSubTasks = task.sub_tasks
-
+      this.allSubTasks = task.sub_tasks;
 
       $("#exampleModal").modal("show");
     },
-    cancelSubTaskEdit(){
+    cancelSubTaskEdit() {
       this.subEditMode = false;
       this.taskData.reset();
       this.taskData.clear();
     },
-    editSubTask(sub_task){
+    editSubTask(sub_task) {
       this.editMode = false;
       this.performMode = false;
       this.subTaskMode = true;
@@ -430,23 +653,22 @@ export default {
       this.taskData.reset();
       this.taskData.clear();
 
-
       this.taskData.id = sub_task.id;
       this.taskData.parent_id = sub_task.parent_id;
-      this.taskData.title= sub_task.title;
+      this.taskData.title = sub_task.title;
       this.taskData.priority = sub_task.priority;
       this.taskData.start_date = sub_task.start_date;
       this.taskData.end_date = sub_task.end_date;
       this.taskData.description = sub_task.description;
 
-      sub_task.users.forEach(user => {
-        this.taskData.assign_to.push(user.id)
-      })
+      sub_task.users.forEach((user) => {
+        this.taskData.assign_to.push(user.id);
+      });
     },
-    updateSubTask(){
+    updateSubTask() {
       this.$store.dispatch("updateTask", this.taskData);
     },
-    deleteSubTask(sub_task){
+    deleteSubTask(sub_task) {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -462,7 +684,7 @@ export default {
       });
     },
     storeSubTask() {
-      this.$store.dispatch('storeTask', this.taskData);
+      this.$store.dispatch("storeTask", this.taskData);
     },
     performTask(task) {
       this.editMode = true;
@@ -477,20 +699,21 @@ export default {
     },
     getPerformTaskFile(event) {
       this.performTaskData.file = event.target.files[0];
-
     },
     storePerformTask() {
-      const config = { headers: { 'content-type': 'multipart/form-data' } };
+      const config = { headers: { "content-type": "multipart/form-data" } };
       let formData = new FormData();
 
-      formData.append('task_id', this.taskInfo.id);
-      formData.append('result', this.performTaskData.result);
-      formData.append('progress', this.performTaskData.progress);
-      formData.append('file', this.performTaskData.file);
+      formData.append("task_id", this.taskInfo.id);
+      formData.append("result", this.performTaskData.result);
+      formData.append("progress", this.performTaskData.progress);
+      formData.append("file", this.performTaskData.file);
 
-      this.$store.dispatch('storePerformTask', { performTaskData: formData, config: config });
+      this.$store.dispatch("storePerformTask", {
+        performTaskData: formData,
+        config: config,
+      });
     },
-
   },
 };
 </script>
